@@ -20,6 +20,7 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+data/test_receipts/
 
 # Environment
 .env

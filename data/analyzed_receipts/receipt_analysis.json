@@ -1,0 +1,208 @@
+{
+  "metadata": {
+    "store": "Whole Foods Market",
+    "address": "2905 Pearl St, Boulder, CO 80301",
+    "phone": "303 545 6611",
+    "receipt_number": "908 28003",
+    "date": "11/30/2024",
+    "time": "04:25 PM"
+  },
+  "items": [
+    {
+      "brand": "365WFM",
+      "product": "Soft Facial Tissue",
+      "category": "Household",
+      "quantity": 1,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 1.29,
+      "total_price": 1.29,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": "BMBMBO",
+      "product": "3 Ply Facial Tissue",
+      "category": "Household",
+      "quantity": 1,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 3.39,
+      "total_price": 3.39,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": "365WFM",
+      "product": "Bath Tissue 6CT",
+      "category": "Household",
+      "quantity": 1,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 5.29,
+      "total_price": 5.29,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": "365WFM",
+      "product": "Heavy Duty Aluminum Foil",
+      "category": "Household",
+      "quantity": 1,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 3.99,
+      "total_price": 3.99,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": null,
+      "product": "Rosemary Sourdough Scali Loaf",
+      "category": "Bakery",
+      "quantity": 1,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 6.0,
+      "total_price": 6.0,
+      "is_organic": false,
+      "savings": 3.0
+    },
+    {
+      "brand": null,
+      "product": "Green Asparagus",
+      "category": "Produce",
+      "quantity": null,
+      "weight": 0.99,
+      "unit": "pounds",
+      "unit_price": 4.99,
+      "total_price": 4.94,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": "365WFM",
+      "product": "Organic Peeled Garlic 6oz",
+      "category": "Produce",
+      "quantity": 1,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 3.99,
+      "total_price": 3.99,
+      "is_organic": true,
+      "savings": null
+    },
+    {
+      "brand": null,
+      "product": "Organic Banana",
+      "category": "Produce",
+      "quantity": null,
+      "weight": 2.49,
+      "unit": "pounds",
+      "unit_price": 0.79,
+      "total_price": 1.97,
+      "is_organic": true,
+      "savings": null
+    },
+    {
+      "brand": "365WFM",
+      "product": "Garlic Hummus",
+      "category": "Prepared Foods",
+      "quantity": 1,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 3.19,
+      "total_price": 3.19,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": "365WFM",
+      "product": "Roasted Red Hummus",
+      "category": "Prepared Foods",
+      "quantity": 1,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 3.19,
+      "total_price": 3.19,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": null,
+      "product": "Whole Turkey Leg",
+      "category": "Meat",
+      "quantity": null,
+      "weight": 2.72,
+      "unit": "pounds",
+      "unit_price": 2.99,
+      "total_price": 6.09,
+      "is_organic": false,
+      "savings": 2.04
+    },
+    {
+      "brand": null,
+      "product": "Alaskan Sockeye Salmon Fillet MSC",
+      "category": "Seafood",
+      "quantity": null,
+      "weight": 0.49,
+      "unit": "pounds",
+      "unit_price": 15.99,
+      "total_price": 7.82,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": null,
+      "product": "Alaskan Sockeye Salmon Fillet MSC",
+      "category": "Seafood",
+      "quantity": null,
+      "weight": 0.37,
+      "unit": "pounds",
+      "unit_price": 15.99,
+      "total_price": 5.97,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": null,
+      "product": "Carry Out Bag",
+      "category": "Miscellaneous",
+      "quantity": 2,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 0.1,
+      "total_price": 0.2,
+      "is_organic": false,
+      "savings": null
+    }
+  ],
+  "totals": {
+    "subtotal": 66.65,
+    "total_savings": 5.04,
+    "net_sales": 61.61,
+    "bag_fee": 0.2,
+    "tax": [
+      {
+        "rate": 9.04,
+        "amount": 1.26
+      },
+      {
+        "rate": 3.86,
+        "amount": 1.84
+      }
+    ],
+    "total": 64.91
+  },
+  "payment": {
+    "method": "VISA",
+    "card_last_four": "2065",
+    "amount": 64.91
+  },
+  "promotions": [
+    {
+      "description": "Savings with Prime",
+      "savings": 5.04
+    }
+  ]
+}
