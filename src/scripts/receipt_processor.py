@@ -1,5 +1,6 @@
 import os
 import json
+import argparse
 from openai import OpenAI
 from pathlib import Path
 from base64 import b64encode
@@ -38,7 +39,7 @@ class TranscriptionAgent(ReceiptAgent):
                 messages=[
                     {
                         "role": "system",
-                        "content": "Transcribe receipt text exactly as shown. Preserve all formatting, spacing, symbols, and numbers. Focus solely on accurate text extraction."
+                        "content": "Transcribe receipt text exactly as shown. Preserve all formatting, spacing, symbols, and numbers. Focus solely on accurate text extraction. Pay special attention to product names, brands and prices."
                     },
                     {
                         "role": "user",
@@ -64,6 +65,47 @@ class TranscriptionAgent(ReceiptAgent):
         except Exception as e:
             return ProcessingResult(success=False, error=f"Transcription failed: {str(e)}")
 
+class TextMergingAgent(ReceiptAgent):
+    """Agent responsible for reconstructing complete receipt text from multiple overlapping transcriptions."""
+    
+    def process(self, transcriptions: List[str]) -> ProcessingResult:
+        start_time = time.time()
+        try:
+            response = self.client.chat.completions.create(
+                model="gpt-4o",
+                messages=[
+                    {
+                        "role": "system",
+                        "content": """You are a receipt reconstruction specialist. Your task is to:
+1. Analyze multiple transcriptions of the same receipt that may be partial or overlapping
+2. Reconstruct a single, complete receipt text as if it was transcribed from one perfect image
+3. Handle conflicts and ambiguities by:
+   - Using the clearest/most complete version of each item description
+   - Choosing the most consistent price when variations exist
+   - Ensuring all unique items are preserved
+   - Maintaining correct receipt structure (header → items → totals → footer)
+4. Remove any duplicated information
+5. Ensure numerical consistency (e.g., item prices add up to subtotal)
+6. Preserve original formatting and layout
+
+Output just the reconstructed receipt text with no explanations or annotations."""
+                    },
+                    {
+                        "role": "user",
+                        "content": "Reconstruct a complete receipt from these overlapping transcriptions:\n\n" + 
+                                 "\n=====NEXT TRANSCRIPTION=====\n".join(transcriptions)
+                    }
+                ],
+                max_tokens=2048
+            )
+            
+            duration = time.time() - start_time
+            print(f"{self.__class__.__name__} took {duration:.2f}s")
+            return ProcessingResult(success=True, data=response.choices[0].message.content.strip())
+            
+        except Exception as e:
+            return ProcessingResult(success=False, error=f"Text merging failed: {str(e)}")
+
 class QualityCheckAgent(ReceiptAgent):
     """Agent responsible for verifying critical numerical data against original image."""
     
@@ -73,7 +115,7 @@ class QualityCheckAgent(ReceiptAgent):
             base64_image = self.encode_image(image_path)
             
             response = self.client.chat.completions.create(
-                model="gpt-4o-mini",
+                model="gpt-4o",
                 messages=[
                     {
                         "role": "system",
@@ -81,8 +123,7 @@ class QualityCheckAgent(ReceiptAgent):
 - Item prices and quantities
 - Subtotal, tax, total
 - Receipt number, date
-Reply with "VERIFIED: " + original text if correct, or corrected text if errors found.
-"""
+Reply with "VERIFIED: " + original text if correct, or corrected text if errors found."""
                     },
                     {
                         "role": "user",
@@ -108,7 +149,6 @@ Reply with "VERIFIED: " + original text if correct, or corrected text if errors 
             duration = time.time() - start_time
             print(f"{self.__class__.__name__} took {duration:.2f}s")
             
-            # Handle the verified response
             if verified_text.startswith("VERIFIED: "):
                 return ProcessingResult(success=True, data=transcribed_text)
             
@@ -118,13 +158,13 @@ Reply with "VERIFIED: " + original text if correct, or corrected text if errors 
             return ProcessingResult(success=False, error=f"Quality check failed: {str(e)}")
 
 class StructuredDataAgent(ReceiptAgent):
-    """Combined agent for normalization and JSON formatting."""
+    """Agent for normalization and JSON formatting."""
     
     def process(self, text: str) -> ProcessingResult:
         start_time = time.time()
         try:
             response = self.client.chat.completions.create(
-                model="gpt-4o-mini",
+                model="gpt-4o",
                 messages=[
                     {
                         "role": "system",
@@ -220,24 +260,52 @@ class OptimizedReceiptProcessor:
     
     def __init__(self, api_key: str):
         self.transcriber = TranscriptionAgent(api_key)
+        self.merger = TextMergingAgent(api_key)
         self.checker = QualityCheckAgent(api_key)
         self.structured_data = StructuredDataAgent(api_key)
     
-    def process_receipt(self, image_path: str) -> ProcessingResult:
-        """Process receipt through optimized pipeline."""
+    def process_receipt_folder(self, folder_path: Path) -> ProcessingResult:
+        """Process all receipt images in a folder."""
         start_time = time.time()
         try:
-            # Step 1: Transcribe image
-            result = self.transcriber.process(image_path)
-            if not result.success:
-                return result
+            # Get all jpg images in the folder
+            image_paths = list(folder_path.glob('*.jpg'))
+            if not image_paths:
+                return ProcessingResult(success=False, error="No receipt images found in folder")
+
+            print(f"Found {len(image_paths)} receipt images")
             
-            # Step 2: Quality check against original image
-            checked = self.checker.process(image_path, result.data)
+            # Step 1: Transcribe all images
+            transcriptions = []
+            for image_path in image_paths:
+                print(f"Transcribing {image_path.name}...")
+                result = self.transcriber.process(str(image_path))
+                if result.success:
+                    transcriptions.append(result.data)
+                else:
+                    print(f"Warning: Failed to transcribe {image_path.name}: {result.error}")
+            
+            if not transcriptions:
+                return ProcessingResult(success=False, error="No successful transcriptions")
+            
+            # Step 2: Merge transcriptions if multiple images exist
+            if len(transcriptions) > 1:
+                print("Merging multiple transcriptions...")
+                merged = self.merger.process(transcriptions)
+                if not merged.success:
+                    return merged
+                text_for_checking = merged.data
+            else:
+                text_for_checking = transcriptions[0]
+            
+            # Step 3: Quality check against the most complete image
+            print("Performing quality check...")
+            checked = self.checker.process(str(image_paths[0]), text_for_checking)
             if not checked.success:
                 return checked
             
-            # Step 3: Create structured data
+            # Step 4: Create structured data
+            print("Creating structured data...")
             final = self.structured_data.process(checked.data)
             
             duration = time.time() - start_time
@@ -247,36 +315,23 @@ class OptimizedReceiptProcessor:
         except Exception as e:
             return ProcessingResult(success=False, error=f"Processing pipeline failed: {str(e)}")
 
-def main():
-    root_dir = Path(__file__).parent.parent.parent
-    env_path = root_dir / '.env'
-    
-    if not env_path.exists():
-        print(f"Error: .env file not found at {env_path}")
+def process_receipt(receipt_folder: str, api_key: str) -> None:
+    """Process a receipt folder and save results."""
+    folder_path = Path(receipt_folder)
+    if not folder_path.exists():
+        print(f"Error: Folder not found: {folder_path}")
         return
         
-    load_dotenv(env_path)
-    api_key = os.getenv('OPENAI_API_KEY')
-    
-    if not api_key:
-        print("Error: OPENAI_API_KEY not found in .env file")
-        return
-    
-    # Process single receipt image
-    receipt_path = root_dir / "data" / "test_receipts" / "test1.jpg"
-    if not receipt_path.exists():
-        print("Error: Receipt image not found")
-        return
-    
-    print("Processing receipt image...")
+    print(f"\nProcessing receipt folder: {folder_path}")
     processor = OptimizedReceiptProcessor(api_key)
-    results = processor.process_receipt(str(receipt_path))
+    results = processor.process_receipt_folder(folder_path)
     
-    output_dir = root_dir / "data" / "analyzed_receipts"
+    # Create analysis subfolder
+    output_dir = folder_path / "analysis"
     output_dir.mkdir(parents=True, exist_ok=True)
     
     if results.success:
-        # Save JSON results
+        # Save results
         json_path = output_dir / "receipt_analysis.json"
         with open(json_path, 'w') as f:
             json.dump(results.data, f, indent=2)
@@ -300,6 +355,28 @@ def main():
         print(f"\nError: {results.error}")
         if results.raw_response:
             print(f"\nRaw response: {results.raw_response}")
+
+def main():
+    parser = argparse.ArgumentParser(description='Process receipt images in a folder')
+    parser.add_argument('receipt_folder', help='Path to the folder containing receipt images')
+    parser.add_argument('--env', help='Path to .env file', default='.env')
+    
+    args = parser.parse_args()
+    
+    # Load environment variables
+    env_path = Path(args.env)
+    if not env_path.exists():
+        print(f"Error: .env file not found at {env_path}")
+        return
+        
+    load_dotenv(env_path)
+    api_key = os.getenv('OPENAI_API_KEY')
+    
+    if not api_key:
+        print("Error: OPENAI_API_KEY not found in .env file")
+        return
+    
+    process_receipt(args.receipt_folder, api_key)
 
 if __name__ == "__main__":
     main()

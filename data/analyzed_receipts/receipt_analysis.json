@@ -1,15 +1,15 @@
 {
   "metadata": {
     "store": "Whole Foods Market",
-    "address": "2905 Pearl St, Boulder, CO 80301",
-    "phone": "303-545-6611",
-    "receipt_number": "63011008390828003113020240",
+    "address": "2905 Pearl St, Boulder, CO 80301 1130",
+    "phone": "303 545 6611",
+    "receipt_number": "908 28003",
     "date": "11/30/2024",
     "time": "04:25 PM"
   },
   "items": [
     {
-      "brand": "365 Whole Foods Market",
+      "brand": "365WFM",
       "product": "Soft Facial Tissue",
       "category": "Tissue",
       "quantity": null,
@@ -21,7 +21,7 @@
       "savings": null
     },
     {
-      "brand": "Bamboo",
+      "brand": "BMBMBO",
       "product": "3-Ply Facial Tissue",
       "category": "Tissue",
       "quantity": null,
@@ -33,8 +33,8 @@
       "savings": null
     },
     {
-      "brand": "365 Whole Foods Market",
-      "product": "Bath Tissue",
+      "brand": "365WFM",
+      "product": "Bath Tissue 6 Count",
       "category": "Tissue",
       "quantity": null,
       "weight": null,
@@ -45,9 +45,9 @@
       "savings": null
     },
     {
-      "brand": "365 Whole Foods Market",
+      "brand": "365WFM",
       "product": "Heavy Duty Aluminum Foil",
-      "category": "Kitchen Supplies",
+      "category": "Foil",
       "quantity": null,
       "weight": null,
       "unit": "each",
@@ -58,20 +58,20 @@
     },
     {
       "brand": null,
-      "product": "Rosemary Sourdough Bread Loaf",
-      "category": "Bread",
+      "product": "Rosemary Sourdough Loaf",
+      "category": "Bakery",
       "quantity": null,
-      "weight": 6.0,
-      "unit": "pounds",
-      "unit_price": 7.49,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 6.0,
       "total_price": 6.0,
       "is_organic": false,
-      "savings": 3.0
+      "savings": 1.49
     },
     {
       "brand": null,
       "product": "Green Asparagus",
-      "category": "Vegetable",
+      "category": "Produce",
       "quantity": 0.99,
       "weight": 0.99,
       "unit": "pounds",
@@ -81,11 +81,11 @@
       "savings": null
     },
     {
-      "brand": "365 Whole Foods Market",
+      "brand": "365WFM",
       "product": "Organic Peeled Garlic",
-      "category": "Vegetable",
-      "quantity": null,
-      "weight": 6,
+      "category": "Produce",
+      "quantity": 6,
+      "weight": null,
       "unit": "each",
       "unit_price": 3.99,
       "total_price": 3.99,
@@ -95,7 +95,7 @@
     {
       "brand": null,
       "product": "Organic Banana",
-      "category": "Fruit",
+      "category": "Produce",
       "quantity": 2.49,
       "weight": 2.49,
       "unit": "pounds",
@@ -105,7 +105,7 @@
       "savings": null
     },
     {
-      "brand": "365 Whole Foods Market",
+      "brand": "365WFM",
       "product": "Garlic Hummus",
       "category": "Deli",
       "quantity": null,
@@ -117,8 +117,8 @@
       "savings": null
     },
     {
-      "brand": "365 Whole Foods Market",
-      "product": "Roasted Red Hummus",
+      "brand": "365WFM",
+      "product": "Roasted Red Pepper Hummus",
       "category": "Deli",
       "quantity": null,
       "weight": null,
@@ -141,9 +141,9 @@
       "savings": 2.04
     },
     {
-      "brand": "Alaskan Sockeye Salmon",
-      "product": "Fillet",
-      "category": "Fish",
+      "brand": null,
+      "product": "Alaska Sockeye Salmon Fillet",
+      "category": "Seafood",
       "quantity": 0.49,
       "weight": 0.49,
       "unit": "pounds",
@@ -153,21 +153,21 @@
       "savings": null
     },
     {
-      "brand": "Alaskan Sockeye Salmon",
-      "product": "Fillet",
-      "category": "Fish",
+      "brand": null,
+      "product": "Alaska Sockeye Salmon Fillet",
+      "category": "Seafood",
       "quantity": 0.37,
       "weight": 0.37,
       "unit": "pounds",
       "unit_price": 15.99,
-      "total_price": 5.97,
+      "total_price": 5.37,
       "is_organic": false,
       "savings": null
     },
     {
       "brand": null,
       "product": "Carry Out Bag Charge",
-      "category": "Bag Fee",
+      "category": "Miscellaneous",
       "quantity": 2,
       "weight": null,
       "unit": "each",
@@ -201,12 +201,8 @@
   },
   "promotions": [
     {
-      "description": "Savings with Prime Membership",
-      "savings": 3.0
-    },
-    {
-      "description": "Savings with Prime Membership on Whole Turkey Leg",
-      "savings": 2.04
+      "description": "Savings with Prime",
+      "savings": 5.04
     }
   ]
 }
