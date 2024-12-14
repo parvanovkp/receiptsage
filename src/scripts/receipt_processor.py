@@ -7,363 +7,383 @@ from base64 import b64encode
 from typing import Dict, Any, Optional, List
 from dotenv import load_dotenv
 from dataclasses import dataclass
-import time
 
 @dataclass
 class ProcessingResult:
-    """Container for processing results and errors."""
     success: bool
     data: Optional[Any] = None
     error: Optional[str] = None
-    raw_response: Optional[str] = None
 
-class ReceiptAgent:
+class ReceiptProcessor:
     def __init__(self, api_key: str):
         self.client = OpenAI(api_key=api_key)
-    
+        
     def encode_image(self, image_path: str) -> str:
-        """Encode image to base64."""
         with open(image_path, "rb") as image_file:
             return b64encode(image_file.read()).decode('utf-8')
 
-class TranscriptionAgent(ReceiptAgent):
-    """Agent responsible for transcribing text from receipt images."""
-    
-    def process(self, image_path: str) -> ProcessingResult:
-        start_time = time.time()
+    def transcribe_images(self, image_paths: List[str]) -> ProcessingResult:
+        """Transcribe multiple receipt images and merge them."""
         try:
-            base64_image = self.encode_image(image_path)
+            # Handle single image case directly
+            if len(image_paths) == 1:
+                return self.process_receipt(image_paths[0])
+
+            print("Processing multiple receipt images...")
             
-            response = self.client.chat.completions.create(
-                model="gpt-4o",
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "Transcribe receipt text exactly as shown. Preserve all formatting, spacing, symbols, and numbers. Focus solely on accurate text extraction. Pay special attention to product names, brands and prices."
-                    },
-                    {
-                        "role": "user",
-                        "content": [
-                            {"type": "text", "text": "Extract text from this receipt image"},
-                            {
-                                "type": "image_url",
-                                "image_url": {
-                                    "url": f"data:image/jpeg;base64,{base64_image}",
-                                    "detail": "high"
+            # Gather all transcriptions
+            all_texts = []
+            for img_path in image_paths:
+                print(f"Processing: {Path(img_path).name}")
+                response = self.client.chat.completions.create(
+                    model="gpt-4o",
+                    temperature=0.01,
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": """Transcribe this receipt segment exactly as shown, preserving:
+1. All text, numbers, and formatting exactly as they appear
+2. Item descriptions, quantities, and prices
+3. Any visible header or footer information
+4. Any partial lines or items
+
+Look carefully for:
+- Items that span multiple lines
+- All price information
+- Savings and discounts
+- Every single item on the receipt
+Output raw text only."""
+                        },
+                        {
+                            "role": "user",
+                            "content": [
+                                {"type": "text", "text": "Transcribe this receipt segment:"},
+                                {
+                                    "type": "image_url",
+                                    "image_url": {
+                                        "url": f"data:image/jpeg;base64,{self.encode_image(img_path)}",
+                                        "detail": "high"
+                                    }
                                 }
-                            }
-                        ]
-                    }
-                ],
-                max_tokens=2048
-            )
-            
-            duration = time.time() - start_time
-            print(f"{self.__class__.__name__} took {duration:.2f}s")
-            return ProcessingResult(success=True, data=response.choices[0].message.content.strip())
-            
-        except Exception as e:
-            return ProcessingResult(success=False, error=f"Transcription failed: {str(e)}")
+                            ]
+                        }
+                    ],
+                    max_tokens=1024
+                )
+                all_texts.append(response.choices[0].message.content.strip())
 
-class TextMergingAgent(ReceiptAgent):
-    """Agent responsible for reconstructing complete receipt text from multiple overlapping transcriptions."""
-    
-    def process(self, transcriptions: List[str]) -> ProcessingResult:
-        start_time = time.time()
-        try:
+            # Merge transcriptions
+            print("Merging overlapping segments...")
             response = self.client.chat.completions.create(
                 model="gpt-4o",
+                temperature=0.01,
                 messages=[
                     {
                         "role": "system",
-                        "content": """You are a receipt reconstruction specialist. Your task is to:
-1. Analyze multiple transcriptions of the same receipt that may be partial or overlapping
-2. Reconstruct a single, complete receipt text as if it was transcribed from one perfect image
-3. Handle conflicts and ambiguities by:
-   - Using the clearest/most complete version of each item description
-   - Choosing the most consistent price when variations exist
-   - Ensuring all unique items are preserved
-   - Maintaining correct receipt structure (header → items → totals → footer)
-4. Remove any duplicated information
-5. Ensure numerical consistency (e.g., item prices add up to subtotal)
-6. Preserve original formatting and layout
-
-Output just the reconstructed receipt text with no explanations or annotations."""
+                        "content": """Merge these overlapping receipt segments into a single coherent receipt.
+Rules:
+1. Handle overlapping sections by keeping the clearest/most complete version
+2. Maintain the correct order of items
+3. Ensure no duplicate items
+4. Preserve all price information exactly
+5. Keep all header and footer information
+Output the complete merged receipt text."""
                     },
                     {
                         "role": "user",
-                        "content": "Reconstruct a complete receipt from these overlapping transcriptions:\n\n" + 
-                                 "\n=====NEXT TRANSCRIPTION=====\n".join(transcriptions)
+                        "content": "Merge these receipt segments:\n\n" + 
+                                 "\n---NEXT SEGMENT---\n".join(all_texts)
                     }
                 ],
                 max_tokens=2048
             )
             
-            duration = time.time() - start_time
-            print(f"{self.__class__.__name__} took {duration:.2f}s")
-            return ProcessingResult(success=True, data=response.choices[0].message.content.strip())
+            merged_text = response.choices[0].message.content.strip()
+            
+            # Process merged text into structured format
+            return self.extract_structured_data(merged_text)
             
         except Exception as e:
-            return ProcessingResult(success=False, error=f"Text merging failed: {str(e)}")
+            return ProcessingResult(success=False, error=f"Failed to process multiple images: {str(e)}")
 
-class QualityCheckAgent(ReceiptAgent):
-    """Agent responsible for verifying critical numerical data against original image."""
-    
-    def process(self, image_path: str, transcribed_text: str) -> ProcessingResult:
-        start_time = time.time()
-        try:
-            base64_image = self.encode_image(image_path)
-            
-            response = self.client.chat.completions.create(
-                model="gpt-4o",
-                messages=[
-                    {
-                        "role": "system",
-                        "content": """Verify these numbers ONLY against the receipt image:
-- Item prices and quantities
-- Subtotal, tax, total
-- Receipt number, date
-Reply with "VERIFIED: " + original text if correct, or corrected text if errors found."""
-                    },
-                    {
-                        "role": "user",
-                        "content": [
-                            {
-                                "type": "text",
-                                "text": f"Verify numerical data in this text against the receipt image:\n\n{transcribed_text}"
-                            },
-                            {
-                                "type": "image_url",
-                                "image_url": {
-                                    "url": f"data:image/jpeg;base64,{base64_image}",
-                                    "detail": "high"
-                                }
-                            }
-                        ]
-                    }
-                ],
-                max_tokens=2048
-            )
-            
-            verified_text = response.choices[0].message.content.strip()
-            duration = time.time() - start_time
-            print(f"{self.__class__.__name__} took {duration:.2f}s")
-            
-            if verified_text.startswith("VERIFIED: "):
-                return ProcessingResult(success=True, data=transcribed_text)
-            
-            return ProcessingResult(success=True, data=verified_text)
-            
-        except Exception as e:
-            return ProcessingResult(success=False, error=f"Quality check failed: {str(e)}")
-
-class StructuredDataAgent(ReceiptAgent):
-    """Agent for normalization and JSON formatting."""
-    
-    def process(self, text: str) -> ProcessingResult:
-        start_time = time.time()
+    def process_receipt(self, image_path: str) -> ProcessingResult:
+        """Process a single receipt image."""
         try:
             response = self.client.chat.completions.create(
                 model="gpt-4o",
+                temperature=0.01,
                 messages=[
                     {
                         "role": "system",
-                        "content": """Convert receipt text to valid JSON, ensuring:
-1. All monetary values must be numbers (not strings)
-2. All quantities and weights must be numbers (not strings)
-3. All rates must be numbers (not strings)
-4. Date and time should be strings in specified format
-5. Expand all abbreviations to full English words
-
-Required structure:
+                        "content": """Extract receipt data into JSON following this exact schema:
 {
   "metadata": {
     "store": string,
     "address": string,
-    "phone": string,
+    "phone": string | null,
     "receipt_number": string,
-    "date": "MM/DD/YYYY",
-    "time": "HH:MM AM/PM"
+    "date": string,
+    "time": string
   },
   "items": [{
-    "brand": string or null,
-    "product": string,
-    "category": string,
-    "quantity": number or null,
-    "weight": number or null,
-    "unit": "pounds" or "each",
+    "brand": string | null,     // Full brand name, not abbreviated
+    "product": string,          // Full product name, not abbreviated
+    "product_type": string,     // Generic product type (e.g., toilet paper, pie, bread, salmon)
+    "category": string,         // One of: Produce, Bakery, Household, Meat, Seafood, Grocery, Miscellaneous
+    "quantity": number | null,  // Use for unit items
+    "weight": number | null,    // Use for weighted items (in pounds)
+    "unit": "pounds" | "each",
     "unit_price": number,
     "total_price": number,
     "is_organic": boolean,
-    "savings": number or null
+    "savings": number | null
   }],
   "totals": {
     "subtotal": number,
     "total_savings": number,
-    "net_sales": number,
-    "bag_fee": number or null,
-    "tax": [{"rate": number, "amount": number}],
+    "tax": [{
+      "rate": number,
+      "amount": number
+    }],
     "total": number
   },
   "payment": {
     "method": string,
-    "card_last_four": string or null,
+    "card_last_four": string | null,
     "amount": number
-  },
-  "promotions": [{
-    "description": string,
-    "savings": number
-  }]
-}"""
+  }
+}
+
+Rules:
+1. Never use abbreviations in product or brand names. Examples:
+   - "FCL TSSUE" → "Facial Tissue"
+   - "SDROGH" → "Sourdough"
+   - "RSTD" → "Roasted"
+   - "PEELD" → "Peeled"
+   - "GRLC" → "Garlic"
+   - "HD" → "Heavy Duty"
+   - "OG" → "Organic"
+   - "AK" → "Alaskan"
+   - "SOCKEY" → "Sockeye"
+   - "FLLT" → "Fillet"
+
+2. For product_type, use generic product categories like:
+   - facial tissue
+   - toilet paper
+   - aluminum foil
+   - sourdough bread
+   - apple pie
+   - asparagus
+   - garlic
+   - bananas
+   - hummus
+   - turkey
+   - salmon
+
+3. Brand name normalization:
+   - "365WFM" → "365 Whole Foods Market"
+   - "BMBMBO" → "Bamboo"
+   - "SWFM" → "Whole Foods Market"
+
+4. Important:
+   - Check for and include every item on the receipt
+   - Look carefully for items that might span multiple lines
+   - For weighted items: use weight in pounds, set quantity null
+   - For unit items: use quantity, set weight null
+   - Keep any certification or grade indicators (MSC, S3) in the product name"""
                     },
                     {
                         "role": "user",
-                        "content": f"Convert this receipt text to structured JSON with proper data types:\n\n{text}"
+                        "content": [
+                            {"type": "text", "text": "Extract complete receipt data with full product names:"},
+                            {
+                                "type": "image_url",
+                                "image_url": {
+                                    "url": f"data:image/jpeg;base64,{self.encode_image(image_path)}",
+                                    "detail": "high"
+                                }
+                            }
+                        ]
                     }
                 ],
-                max_tokens=2048
+                max_tokens=4096,
+                response_format={ "type": "json_object" }
             )
             
-            result = response.choices[0].message.content.strip()
+            data = json.loads(response.choices[0].message.content)
+            return ProcessingResult(success=True, data=data)
             
-            # Clean up any markdown formatting
-            if result.startswith('```') and result.endswith('```'):
-                result = result.split('```')[1]
-                if result.startswith('json\n'):
-                    result = result[5:]
-                result = result.strip()
-            
-            try:
-                parsed_data = json.loads(result)
-                
-                # Verify critical data types
-                if not isinstance(parsed_data.get('totals', {}).get('subtotal'), (int, float)):
-                    raise ValueError("Subtotal must be a number")
-                if not isinstance(parsed_data.get('totals', {}).get('total'), (int, float)):
-                    raise ValueError("Total must be a number")
-                
-                duration = time.time() - start_time
-                print(f"{self.__class__.__name__} took {duration:.2f}s")
-                return ProcessingResult(success=True, data=parsed_data)
-            except json.JSONDecodeError:
-                return ProcessingResult(
-                    success=False, 
-                    error="Failed to parse JSON response",
-                    raw_response=result
-                )
-                
         except Exception as e:
-            return ProcessingResult(success=False, error=f"Structured data formatting failed: {str(e)}")
+            return ProcessingResult(success=False, error=str(e))
 
-class OptimizedReceiptProcessor:
-    """Optimized receipt processing system."""
-    
-    def __init__(self, api_key: str):
-        self.transcriber = TranscriptionAgent(api_key)
-        self.merger = TextMergingAgent(api_key)
-        self.checker = QualityCheckAgent(api_key)
-        self.structured_data = StructuredDataAgent(api_key)
-    
-    def process_receipt_folder(self, folder_path: Path) -> ProcessingResult:
-        """Process all receipt images in a folder."""
-        start_time = time.time()
+    def extract_structured_data(self, text: str) -> ProcessingResult:
+        """Convert merged text to structured JSON."""
         try:
-            # Get all jpg images in the folder
-            image_paths = list(folder_path.glob('*.jpg'))
-            if not image_paths:
-                return ProcessingResult(success=False, error="No receipt images found in folder")
+            response = self.client.chat.completions.create(
+                model="gpt-4o",
+                temperature=0.01,
+                messages=[
+                    {
+                        "role": "system",
+                        "content": """Extract receipt data into JSON following this exact schema:
+{
+  "metadata": {
+    "store": string,
+    "address": string,
+    "phone": string | null,
+    "receipt_number": string,
+    "date": string,
+    "time": string
+  },
+  "items": [{
+    "brand": string | null,     // Full brand name, not abbreviated
+    "product": string,          // Full product name, not abbreviated
+    "product_type": string,     // Generic product type (e.g., toilet paper, pie, bread, salmon)
+    "category": string,         // One of: Produce, Bakery, Household, Meat, Seafood, Grocery, Miscellaneous
+    "quantity": number | null,  // Use for unit items
+    "weight": number | null,    // Use for weighted items (in pounds)
+    "unit": "pounds" | "each",
+    "unit_price": number,
+    "total_price": number,
+    "is_organic": boolean,
+    "savings": number | null
+  }],
+  "totals": {
+    "subtotal": number,
+    "total_savings": number,
+    "tax": [{
+      "rate": number,
+      "amount": number
+    }],
+    "total": number
+  },
+  "payment": {
+    "method": string,
+    "card_last_four": string | null,
+    "amount": number
+  }
+}
 
-            print(f"Found {len(image_paths)} receipt images")
+Rules:
+1. Expand all abbreviations into full names
+2. Use generic types for product_type field
+3. Include every item from the receipt
+4. Double-check all prices and calculations"""
+                    },
+                    {
+                        "role": "user",
+                        "content": f"Convert this receipt text to structured JSON:\n\n{text}"
+                    }
+                ],
+                max_tokens=4096,
+                response_format={ "type": "json_object" }
+            )
             
-            # Step 1: Transcribe all images
-            transcriptions = []
-            for image_path in image_paths:
-                print(f"Transcribing {image_path.name}...")
-                result = self.transcriber.process(str(image_path))
-                if result.success:
-                    transcriptions.append(result.data)
-                else:
-                    print(f"Warning: Failed to transcribe {image_path.name}: {result.error}")
-            
-            if not transcriptions:
-                return ProcessingResult(success=False, error="No successful transcriptions")
-            
-            # Step 2: Merge transcriptions if multiple images exist
-            if len(transcriptions) > 1:
-                print("Merging multiple transcriptions...")
-                merged = self.merger.process(transcriptions)
-                if not merged.success:
-                    return merged
-                text_for_checking = merged.data
-            else:
-                text_for_checking = transcriptions[0]
-            
-            # Step 3: Quality check against the most complete image
-            print("Performing quality check...")
-            checked = self.checker.process(str(image_paths[0]), text_for_checking)
-            if not checked.success:
-                return checked
-            
-            # Step 4: Create structured data
-            print("Creating structured data...")
-            final = self.structured_data.process(checked.data)
-            
-            duration = time.time() - start_time
-            print(f"{self.__class__.__name__} took {duration:.2f}s")
-            return final
+            data = json.loads(response.choices[0].message.content)
+            return ProcessingResult(success=True, data=data)
             
         except Exception as e:
-            return ProcessingResult(success=False, error=f"Processing pipeline failed: {str(e)}")
+            return ProcessingResult(success=False, error=f"Failed to structure data: {str(e)}")
 
-def process_receipt(receipt_folder: str, api_key: str) -> None:
-    """Process a receipt folder and save results."""
-    folder_path = Path(receipt_folder)
-    if not folder_path.exists():
-        print(f"Error: Folder not found: {folder_path}")
+def print_summary(results: ProcessingResult) -> None:
+    """Print receipt summary."""
+    if not results.success:
+        print(f"\nError: {results.error}")
         return
         
-    print(f"\nProcessing receipt folder: {folder_path}")
-    processor = OptimizedReceiptProcessor(api_key)
-    results = processor.process_receipt_folder(folder_path)
+    data = results.data
+    print("\nReceipt Summary:")
+    print("-" * 50)
     
-    # Create analysis subfolder
-    output_dir = folder_path / "analysis"
-    output_dir.mkdir(parents=True, exist_ok=True)
+    # Metadata
+    meta = data.get('metadata', {})
+    print(f"Store: {meta.get('store', 'N/A')}")
+    print(f"Date: {meta.get('date', 'N/A')} {meta.get('time', '')}")
+    print(f"Receipt #: {meta.get('receipt_number', 'N/A')}")
     
+    # Items
+    items = data.get('items', [])
+    categories = {}
+    organic_count = 0
+    product_types = set()
+    
+    for item in items:
+        cat = item.get('category', 'Unknown')
+        categories[cat] = categories.get(cat, 0) + item.get('total_price', 0)
+        if item.get('is_organic'):
+            organic_count += 1
+        if item.get('product_type'):
+            product_types.add(item.get('product_type'))
+    
+    print(f"\nItems: {len(items)} (Organic: {organic_count})")
+    print("\nProduct Types Found:")
+    for ptype in sorted(product_types):
+        print(f"- {ptype}")
+        
+    print("\nCategory Breakdown:")
+    for cat, total in sorted(categories.items()):
+        print(f"{cat}: ${total:.2f}")
+    
+    # Totals
+    totals = data.get('totals', {})
+    tax_entries = totals.get('tax', [])
+    if isinstance(tax_entries, list):
+        tax_total = sum(t.get('amount', 0) for t in tax_entries)
+    else:
+        tax_total = float(tax_entries) if tax_entries else 0
+    
+    print(f"\nSubtotal: ${totals.get('subtotal', 0):.2f}")
+    print(f"Tax: ${tax_total:.2f}")
+    print(f"Total: ${totals.get('total', 0):.2f}")
+    
+    payment = data.get('payment', {})
+    method = payment.get('method', 'N/A')
+    last_four = payment.get('card_last_four')
+    if last_four:
+        print(f"\nPaid with: {method} ending in {last_four}")
+    else:
+        print(f"\nPaid with: {method}")
+
+def process_folder(folder_path: str, api_key: str) -> None:
+    """Process a receipt folder and save results."""
+    path = Path(folder_path)
+    if not path.exists():
+        print(f"Error: Directory not found: {path}")
+        return
+
+    # Find all image files
+    image_files = sorted(path.glob('*.jpg'))  # Sort to ensure consistent order
+    if not image_files:
+        print(f"Error: No JPG images found in {path}")
+        return
+    
+    print(f"\nFound {len(image_files)} receipt image(s) in: {path}")
+    processor = ReceiptProcessor(api_key)
+    
+    # Process image(s)
+    image_paths = [str(f) for f in image_files]
+    results = processor.transcribe_images(image_paths)
+    
+    # Create analysis subdirectory and save results
     if results.success:
-        # Save results
+        output_dir = path / "analysis"
+        output_dir.mkdir(parents=True, exist_ok=True)
         json_path = output_dir / "receipt_analysis.json"
+        
         with open(json_path, 'w') as f:
             json.dump(results.data, f, indent=2)
         print(f"\nResults saved to: {json_path}")
-        
-        # Print summary
-        print("\nProcessed Receipt Summary:")
-        print("-" * 50)
-        if "metadata" in results.data:
-            meta = results.data["metadata"]
-            print(f"Store: {meta.get('store', 'N/A')}")
-            print(f"Date: {meta.get('date', 'N/A')} {meta.get('time', '')}")
-            print(f"Receipt #: {meta.get('receipt_number', 'N/A')}")
-        if "items" in results.data:
-            print(f"\nTotal Items: {len(results.data['items'])}")
-        if "totals" in results.data:
-            totals = results.data["totals"]
-            print(f"Subtotal: ${totals.get('subtotal', 0):.2f}")
-            print(f"Total: ${totals.get('total', 0):.2f}")
-    else:
-        print(f"\nError: {results.error}")
-        if results.raw_response:
-            print(f"\nRaw response: {results.raw_response}")
+    
+    print_summary(results)
 
 def main():
-    parser = argparse.ArgumentParser(description='Process receipt images in a folder')
-    parser.add_argument('receipt_folder', help='Path to the folder containing receipt images')
+    parser = argparse.ArgumentParser(description='Process receipt directory')
+    parser.add_argument('receipt_dir', help='Path to receipt directory')
     parser.add_argument('--env', help='Path to .env file', default='.env')
     
     args = parser.parse_args()
     
-    # Load environment variables
+    # Load environment
     env_path = Path(args.env)
     if not env_path.exists():
         print(f"Error: .env file not found at {env_path}")
@@ -375,8 +395,8 @@ def main():
     if not api_key:
         print("Error: OPENAI_API_KEY not found in .env file")
         return
-    
-    process_receipt(args.receipt_folder, api_key)
+
+    process_folder(args.receipt_dir, api_key)
 
 if __name__ == "__main__":
     main()
