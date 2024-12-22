@@ -1,18 +1,19 @@
 {
   "metadata": {
     "store": "Whole Foods Market",
-    "address": "2905 Pearl St, Boulder, CO 80301 1130",
-    "phone": "303 545 6611",
+    "address": "2905 Pearl St, Boulder, CO 80301",
+    "phone": "303-545-6611",
     "receipt_number": "908 28003",
     "date": "11/30/2024",
     "time": "04:25 PM"
   },
   "items": [
     {
-      "brand": "365WFM",
+      "brand": "365 Whole Foods Market",
       "product": "Soft Facial Tissue",
-      "category": "Tissue",
-      "quantity": null,
+      "product_type": "facial tissue",
+      "category": "Household",
+      "quantity": 1,
       "weight": null,
       "unit": "each",
       "unit_price": 1.29,
@@ -21,10 +22,11 @@
       "savings": null
     },
     {
-      "brand": "BMBMBO",
+      "brand": "Bamboo",
       "product": "3-Ply Facial Tissue",
-      "category": "Tissue",
-      "quantity": null,
+      "product_type": "facial tissue",
+      "category": "Household",
+      "quantity": 1,
       "weight": null,
       "unit": "each",
       "unit_price": 3.39,
@@ -33,10 +35,11 @@
       "savings": null
     },
     {
-      "brand": "365WFM",
+      "brand": "365 Whole Foods Market",
       "product": "Bath Tissue 6 Count",
-      "category": "Tissue",
-      "quantity": null,
+      "product_type": "toilet paper",
+      "category": "Household",
+      "quantity": 1,
       "weight": null,
       "unit": "each",
       "unit_price": 5.29,
@@ -45,10 +48,11 @@
       "savings": null
     },
     {
-      "brand": "365WFM",
+      "brand": "365 Whole Foods Market",
       "product": "Heavy Duty Aluminum Foil",
-      "category": "Foil",
-      "quantity": null,
+      "product_type": "aluminum foil",
+      "category": "Household",
+      "quantity": 1,
       "weight": null,
       "unit": "each",
       "unit_price": 3.99,
@@ -58,21 +62,36 @@
     },
     {
       "brand": null,
-      "product": "Rosemary Sourdough Loaf",
+      "product": "Rosemary Sourdough Sliced Loaf",
+      "product_type": "sourdough bread",
       "category": "Bakery",
-      "quantity": null,
+      "quantity": 1,
       "weight": null,
       "unit": "each",
       "unit_price": 6.0,
-      "total_price": 6.0,
+      "total_price": 4.49,
       "is_organic": false,
-      "savings": 1.49
+      "savings": 3.0
+    },
+    {
+      "brand": null,
+      "product": "Apple Pie Half",
+      "product_type": "apple pie",
+      "category": "Bakery",
+      "quantity": 1,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 7.49,
+      "total_price": 4.49,
+      "is_organic": false,
+      "savings": 3.0
     },
     {
       "brand": null,
       "product": "Green Asparagus",
+      "product_type": "asparagus",
       "category": "Produce",
-      "quantity": 0.99,
+      "quantity": null,
       "weight": 0.99,
       "unit": "pounds",
       "unit_price": 4.99,
@@ -81,10 +100,11 @@
       "savings": null
     },
     {
-      "brand": "365WFM",
-      "product": "Organic Peeled Garlic",
+      "brand": "365 Whole Foods Market",
+      "product": "Organic Peeled Garlic 6 Ounce",
+      "product_type": "garlic",
       "category": "Produce",
-      "quantity": 6,
+      "quantity": 1,
       "weight": null,
       "unit": "each",
       "unit_price": 3.99,
@@ -95,8 +115,9 @@
     {
       "brand": null,
       "product": "Organic Banana",
+      "product_type": "bananas",
       "category": "Produce",
-      "quantity": 2.49,
+      "quantity": null,
       "weight": 2.49,
       "unit": "pounds",
       "unit_price": 0.79,
@@ -105,10 +126,11 @@
       "savings": null
     },
     {
-      "brand": "365WFM",
+      "brand": "365 Whole Foods Market",
       "product": "Garlic Hummus",
-      "category": "Deli",
-      "quantity": null,
+      "product_type": "hummus",
+      "category": "Grocery",
+      "quantity": 1,
       "weight": null,
       "unit": "each",
       "unit_price": 3.19,
@@ -117,10 +139,11 @@
       "savings": null
     },
     {
-      "brand": "365WFM",
-      "product": "Roasted Red Pepper Hummus",
-      "category": "Deli",
-      "quantity": null,
+      "brand": "365 Whole Foods Market",
+      "product": "Roasted Red Hummus",
+      "product_type": "hummus",
+      "category": "Grocery",
+      "quantity": 1,
       "weight": null,
       "unit": "each",
       "unit_price": 3.19,
@@ -130,9 +153,10 @@
     },
     {
       "brand": null,
-      "product": "Whole Turkey Leg",
+      "product": "Whole Turkey Leg S3",
+      "product_type": "turkey",
       "category": "Meat",
-      "quantity": 2.72,
+      "quantity": null,
       "weight": 2.72,
       "unit": "pounds",
       "unit_price": 2.99,
@@ -142,9 +166,10 @@
     },
     {
       "brand": null,
-      "product": "Alaska Sockeye Salmon Fillet",
+      "product": "Alaskan Sockeye Salmon Fillet MSC",
+      "product_type": "salmon",
       "category": "Seafood",
-      "quantity": 0.49,
+      "quantity": null,
       "weight": 0.49,
       "unit": "pounds",
       "unit_price": 15.99,
@@ -154,19 +179,21 @@
     },
     {
       "brand": null,
-      "product": "Alaska Sockeye Salmon Fillet",
+      "product": "Alaskan Sockeye Salmon Fillet MSC",
+      "product_type": "salmon",
       "category": "Seafood",
-      "quantity": 0.37,
+      "quantity": null,
       "weight": 0.37,
       "unit": "pounds",
       "unit_price": 15.99,
-      "total_price": 5.37,
+      "total_price": 5.97,
       "is_organic": false,
       "savings": null
     },
     {
       "brand": null,
       "product": "Carry Out Bag Charge",
+      "product_type": "bag",
       "category": "Miscellaneous",
       "quantity": 2,
       "weight": null,
@@ -180,8 +207,6 @@
   "totals": {
     "subtotal": 66.65,
     "total_savings": 5.04,
-    "net_sales": 61.61,
-    "bag_fee": 0.2,
     "tax": [
       {
         "rate": 9.04,
@@ -198,11 +223,5 @@
     "method": "VISA",
     "card_last_four": "2065",
     "amount": 64.91
-  },
-  "promotions": [
-    {
-      "description": "Savings with Prime",
-      "savings": 5.04
-    }
-  ]
+  }
 }

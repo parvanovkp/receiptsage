@@ -1,56 +1,60 @@
 {
   "metadata": {
-    "store": "Whole Foods Market - Pearl",
-    "address": "2905 Pearl Street, Boulder, Colorado, 80301",
+    "store": "Whole Foods Market",
+    "address": "2905 Pearl St, Boulder, CO 80301",
     "phone": "303-545-6611",
-    "receipt_number": "63011008390828003113020240",
+    "receipt_number": "908 28003",
     "date": "11/30/2024",
     "time": "04:25 PM"
   },
   "items": [
     {
-      "brand": "365WFM",
-      "product": "San Francisco Italian Flat Tissue",
+      "brand": "365 Whole Foods Market",
+      "product": "Soft Facial Tissue",
+      "product_type": "facial tissue",
       "category": "Household",
       "quantity": 1,
-      "unit": "each",
       "weight": null,
+      "unit": "each",
       "unit_price": 1.29,
       "total_price": 1.29,
       "is_organic": false,
       "savings": null
     },
     {
-      "brand": "Buckle Me",
-      "product": "Buckle Me Over 3 Ply Flat Tissue",
+      "brand": "Bamboo",
+      "product": "3-Ply Facial Tissue",
+      "product_type": "facial tissue",
       "category": "Household",
       "quantity": 1,
-      "unit": "each",
       "weight": null,
+      "unit": "each",
       "unit_price": 3.39,
       "total_price": 3.39,
       "is_organic": false,
       "savings": null
     },
     {
-      "brand": "365WFM",
+      "brand": "365 Whole Foods Market",
       "product": "Bath Tissue 6 Count",
+      "product_type": "bath tissue",
       "category": "Household",
       "quantity": 1,
-      "unit": "each",
       "weight": null,
+      "unit": "each",
       "unit_price": 5.29,
       "total_price": 5.29,
       "is_organic": false,
       "savings": null
     },
     {
-      "brand": "365WFM",
+      "brand": "365 Whole Foods Market",
       "product": "Heavy Duty Aluminum Foil",
+      "product_type": "aluminum foil",
       "category": "Household",
       "quantity": 1,
-      "unit": "each",
       "weight": null,
+      "unit": "each",
       "unit_price": 3.99,
       "total_price": 3.99,
       "is_organic": false,
@@ -58,35 +62,51 @@
     },
     {
       "brand": null,
-      "product": "Rosemary Sourdough Schlob Loaf",
+      "product": "Rosemary Sourdough Sliced Loaf",
+      "product_type": "bread",
       "category": "Bakery",
       "quantity": 1,
-      "unit": "each",
       "weight": null,
+      "unit": "each",
       "unit_price": 6.0,
       "total_price": 6.0,
       "is_organic": false,
-      "savings": 1.49
+      "savings": null
+    },
+    {
+      "brand": null,
+      "product": "Apple Pie Half",
+      "product_type": "pie",
+      "category": "Bakery",
+      "quantity": 1,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 7.49,
+      "total_price": 4.49,
+      "is_organic": false,
+      "savings": 3.0
     },
     {
       "brand": null,
       "product": "Green Asparagus",
+      "product_type": "asparagus",
       "category": "Produce",
       "quantity": null,
-      "unit": "pounds",
       "weight": 0.99,
+      "unit": "pounds",
       "unit_price": 4.99,
       "total_price": 4.94,
       "is_organic": false,
       "savings": null
     },
     {
-      "brand": "365WFM",
-      "product": "Organic Peeled Garlic 6 Ounce",
+      "brand": "365 Whole Foods Market",
+      "product": "Organic Peeled Garlic 6oz",
+      "product_type": "garlic",
       "category": "Produce",
       "quantity": 1,
-      "unit": "each",
       "weight": null,
+      "unit": "each",
       "unit_price": 3.99,
       "total_price": 3.99,
       "is_organic": true,
@@ -95,34 +115,37 @@
     {
       "brand": null,
       "product": "Organic Banana",
+      "product_type": "banana",
       "category": "Produce",
       "quantity": null,
-      "unit": "pounds",
       "weight": 2.49,
+      "unit": "pounds",
       "unit_price": 0.79,
       "total_price": 1.97,
       "is_organic": true,
       "savings": null
     },
     {
-      "brand": "365WFM",
+      "brand": "365 Whole Foods Market",
       "product": "Garlic Hummus",
-      "category": "Deli",
+      "product_type": "hummus",
+      "category": "Grocery",
       "quantity": 1,
-      "unit": "each",
       "weight": null,
+      "unit": "each",
       "unit_price": 3.19,
       "total_price": 3.19,
       "is_organic": false,
       "savings": null
     },
     {
-      "brand": "365WFM",
+      "brand": "365 Whole Foods Market",
       "product": "Roasted Red Hummus",
-      "category": "Deli",
+      "product_type": "hummus",
+      "category": "Grocery",
       "quantity": 1,
-      "unit": "each",
       "weight": null,
+      "unit": "each",
       "unit_price": 3.19,
       "total_price": 3.19,
       "is_organic": false,
@@ -131,10 +154,11 @@
     {
       "brand": null,
       "product": "Whole Turkey Leg",
+      "product_type": "turkey",
       "category": "Meat",
       "quantity": null,
-      "unit": "pounds",
       "weight": 2.72,
+      "unit": "pounds",
       "unit_price": 2.99,
       "total_price": 6.09,
       "is_organic": false,
@@ -142,11 +166,12 @@
     },
     {
       "brand": null,
-      "product": "Alaska Sockeye Salmon Fillet Marine Stewardship Council",
+      "product": "Alaskan Sockeye Salmon Fillet MSC",
+      "product_type": "salmon",
       "category": "Seafood",
       "quantity": null,
-      "unit": "pounds",
       "weight": 0.49,
+      "unit": "pounds",
       "unit_price": 15.99,
       "total_price": 7.82,
       "is_organic": false,
@@ -154,11 +179,12 @@
     },
     {
       "brand": null,
-      "product": "Alaska Sockeye Salmon Fillet Marine Stewardship Council",
+      "product": "Alaskan Sockeye Salmon Fillet MSC",
+      "product_type": "salmon",
       "category": "Seafood",
       "quantity": null,
-      "unit": "pounds",
       "weight": 0.37,
+      "unit": "pounds",
       "unit_price": 15.99,
       "total_price": 5.97,
       "is_organic": false,
@@ -167,10 +193,11 @@
     {
       "brand": null,
       "product": "Carry Out Bag",
+      "product_type": "bag",
       "category": "Miscellaneous",
       "quantity": 2,
-      "unit": "each",
       "weight": null,
+      "unit": "each",
       "unit_price": 0.1,
       "total_price": 0.2,
       "is_organic": false,
@@ -180,15 +207,13 @@
   "totals": {
     "subtotal": 66.65,
     "total_savings": 5.04,
-    "net_sales": 61.61,
-    "bag_fee": 0.2,
     "tax": [
       {
-        "rate": "9.04%",
+        "rate": 9.04,
         "amount": 1.26
       },
       {
-        "rate": "3.86%",
+        "rate": 3.86,
         "amount": 1.84
       }
     ],
@@ -198,15 +223,5 @@
     "method": "VISA",
     "card_last_four": "2065",
     "amount": 64.91
-  },
-  "promotions": [
-    {
-      "description": "Prime Discount on Rosemary Sourdough Schlob Loaf",
-      "savings": 1.49
-    },
-    {
-      "description": "Prime Discount on Whole Turkey Leg",
-      "savings": 2.04
-    }
-  ]
+  }
 }
