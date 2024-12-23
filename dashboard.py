@@ -1,10 +1,9 @@
 import streamlit as st 
 import pandas as pd
 import json
-from sqlalchemy import create_engine, func, extract
+from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
 from models import Receipt, ReceiptItem, ReceiptTax
-from store_utils import normalize_store_name
 import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime, timedelta

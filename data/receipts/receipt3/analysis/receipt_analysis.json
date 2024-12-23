@@ -1,0 +1,231 @@
+{
+  "metadata": {
+    "store": "Whole Foods Market",
+    "address": "2905 Pearl St, Boulder, CO 80301",
+    "phone": "303-545-6611",
+    "receipt_number": "912 86883",
+    "date": "12/12/2024",
+    "time": "04:41 PM"
+  },
+  "items": [
+    {
+      "brand": null,
+      "product": "Hot Bar",
+      "product_type": "prepared food",
+      "category": "Grocery",
+      "quantity": null,
+      "weight": 1.83,
+      "unit": "pounds",
+      "unit_price": 11.99,
+      "total_price": 21.94,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": null,
+      "product": "Cookie Bar",
+      "product_type": "cookies",
+      "category": "Bakery",
+      "quantity": null,
+      "weight": 0.54,
+      "unit": "pounds",
+      "unit_price": 12.99,
+      "total_price": 7.01,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": "Sabra",
+      "product": "Pine Nut Hummus",
+      "product_type": "hummus",
+      "category": "Grocery",
+      "quantity": 1,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 4.49,
+      "total_price": 4.49,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": null,
+      "product": "Organic Whole Milk",
+      "product_type": "milk",
+      "category": "Grocery",
+      "quantity": 1,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 5.69,
+      "total_price": 5.69,
+      "is_organic": true,
+      "savings": null
+    },
+    {
+      "brand": "Noosa",
+      "product": "Coconut Yoghurt",
+      "product_type": "yoghurt",
+      "category": "Grocery",
+      "quantity": 1,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 2.39,
+      "total_price": 2.39,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": "Noosa",
+      "product": "Peach Yoghurt",
+      "product_type": "yoghurt",
+      "category": "Grocery",
+      "quantity": 1,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 2.39,
+      "total_price": 2.39,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": "Noosa",
+      "product": "Vanilla Bean Yoghurt",
+      "product_type": "yoghurt",
+      "category": "Grocery",
+      "quantity": 2,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 2.39,
+      "total_price": 4.78,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": null,
+      "product": "Blueberry Muffin 4 Pack",
+      "product_type": "muffins",
+      "category": "Bakery",
+      "quantity": 1,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 7.49,
+      "total_price": 7.49,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": null,
+      "product": "Cinnamon Roll 4 Count",
+      "product_type": "pastry",
+      "category": "Bakery",
+      "quantity": 1,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 4.99,
+      "total_price": 4.99,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": null,
+      "product": "Carrot Cake Slice",
+      "product_type": "cake",
+      "category": "Bakery",
+      "quantity": 1,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 4.99,
+      "total_price": 4.99,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": null,
+      "product": "Nassau Butter Crunch Chicken",
+      "product_type": "chicken",
+      "category": "Meat",
+      "quantity": 1,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 11.99,
+      "total_price": 10.19,
+      "is_organic": false,
+      "savings": 1.8
+    },
+    {
+      "brand": "Whole Foods Market",
+      "product": "Dark Chocolate Hazel Truffle",
+      "product_type": "chocolate",
+      "category": "Grocery",
+      "quantity": 1,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 7.49,
+      "total_price": 7.49,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": null,
+      "product": "Jasper Bakery Whole Wheat Pizza",
+      "product_type": "pizza",
+      "category": "Grocery",
+      "quantity": 1,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 4.49,
+      "total_price": 4.49,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": null,
+      "product": "Organic Banana",
+      "product_type": "banana",
+      "category": "Produce",
+      "quantity": null,
+      "weight": 2.6,
+      "unit": "pounds",
+      "unit_price": 0.79,
+      "total_price": 2.05,
+      "is_organic": true,
+      "savings": null
+    },
+    {
+      "brand": null,
+      "product": "Carry Out Bag Charge",
+      "product_type": "bag",
+      "category": "Miscellaneous",
+      "quantity": 2,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 0.1,
+      "total_price": 0.2,
+      "is_organic": false,
+      "savings": null
+    }
+  ],
+  "totals": {
+    "subtotal": 96.18,
+    "total_savings": 1.8,
+    "tax": [
+      {
+        "rate": 9.04,
+        "amount": 1.98
+      },
+      {
+        "rate": 7.86,
+        "amount": 1.39
+      },
+      {
+        "rate": 3.86,
+        "amount": 2.11
+      }
+    ],
+    "total": 100.06
+  },
+  "payment": {
+    "method": "VISA",
+    "card_last_four": "0143",
+    "amount": 100.06
+  }
+}
