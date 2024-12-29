@@ -1,6 +1,9 @@
 import streamlit as st 
 import pandas as pd
 import json
+import os
+import tempfile
+import shutil
 from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
 from models import Receipt, ReceiptItem, ReceiptTax
@@ -8,6 +11,20 @@ import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime, timedelta
 from pathlib import Path
+from receipt_processor import ReceiptProcessor, ProcessingResult
+from import_receipts import import_receipt
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
+# Configure Streamlit page
+st.set_page_config(
+    page_title="Receipt Manager",
+    page_icon="🧾",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
 def create_session():
     engine = create_engine('sqlite:///receipts.db')
@@ -236,123 +253,221 @@ def find_receipt_images(json_path):
     receipt_dir = Path(json_path).parent.parent
     return sorted(receipt_dir.glob('*.jpg'))
 
+def handle_receipt_upload(uploaded_files):
+    """Process uploaded receipt files"""
+    if not uploaded_files:
+        return
+        
+    api_key = os.getenv('OPENAI_API_KEY')
+    if not api_key:
+        st.error("OpenAI API key not found. Please check your .env file.")
+        return
+    
+    # Create a temporary directory for processing
+    with tempfile.TemporaryDirectory() as temp_dir:
+        # Process each receipt
+        for uploaded_file in uploaded_files:
+            with st.status(f"Processing {uploaded_file.name}...", expanded=True) as status:
+                try:
+                    # Create timestamp-based directory
+                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    receipt_dir = Path(temp_dir) / f"receipt_{timestamp}"
+                    receipt_dir.mkdir(exist_ok=True)
+                    
+                    # Save uploaded file
+                    file_path = receipt_dir / uploaded_file.name
+                    with open(file_path, "wb") as f:
+                        f.write(uploaded_file.getbuffer())
+                    
+                    status.write("File saved, initiating processing...")
+                    
+                    # Process the receipt
+                    processor = ReceiptProcessor(api_key)
+                    results = processor.process_receipt(str(file_path))
+                    
+                    if results.success:
+                        # Save the analysis results
+                        analysis_dir = receipt_dir / "analysis"
+                        analysis_dir.mkdir(exist_ok=True)
+                        json_path = analysis_dir / "receipt_analysis.json"
+                        
+                        with open(json_path, 'w') as f:
+                            json.dump(results.data, f, indent=2)
+                        
+                        status.write("Receipt processed, importing to database...")
+                        
+                        # Import to database
+                        session = create_session()
+                        try:
+                            receipt = import_receipt(session, json_path)
+                            
+                            # Move to permanent storage
+                            final_dir = Path("data/receipts") / f"receipt_{timestamp}"
+                            final_dir.mkdir(parents=True, exist_ok=True)
+                            shutil.move(str(receipt_dir), str(final_dir))
+                            
+                            status.update(label=f"Successfully processed receipt from {receipt.store}",
+                                        state="complete",
+                                        expanded=False)
+                            
+                        except Exception as e:
+                            status.update(label=f"Error importing receipt: {str(e)}",
+                                        state="error")
+                        finally:
+                            session.close()
+                    else:
+                        status.update(label=f"Error processing receipt: {results.error}",
+                                    state="error")
+                
+                except Exception as e:
+                    status.update(label=f"Error processing file: {str(e)}",
+                                state="error")
+
+def display_upload_section():
+    """Display receipt upload interface"""
+    st.header("Upload Receipts")
+    
+    # File uploader with drag-and-drop
+    uploaded_files = st.file_uploader(
+        "Drop receipt images here or click to browse",
+        accept_multiple_files=True,
+        type=['jpg', 'jpeg', 'png'],
+        help="You can upload multiple receipt images at once"
+    )
+    
+    if uploaded_files:
+        col1, col2 = st.columns([1, 4])
+        with col1:
+            if st.button("Process Receipts", type="primary"):
+                handle_receipt_upload(uploaded_files)
+                st.rerun()  # Refresh the dashboard after processing
+        with col2:
+            st.write(f"{len(uploaded_files)} files selected for processing")
+
 def main():
     st.title("Receipt Analysis Dashboard")
     
+    # Add navigation
+    page = st.sidebar.radio("Navigation", ["Dashboard", "Upload Receipts"])
+    
     session = create_session()
     
-    # Date Range Selector
-    st.sidebar.header("Filters")
-    end_date = datetime.now()
-    start_date = end_date - timedelta(days=30)  # Default to last 30 days
-    
-    start_date = st.sidebar.date_input("Start Date", start_date)
-    end_date = st.sidebar.date_input("End Date", end_date)
-    
-    if start_date > end_date:
-        st.error("Error: End date must be after start date")
-        return
-    
-    # Store Selector
-    stores = pd.read_sql(
-        session.query(Receipt.store_normalized)
-        .distinct()
-        .statement,
-        session.bind
-    )
-    selected_stores = st.sidebar.multiselect(
-        "Select Stores",
-        options=stores['store_normalized'].tolist(),
-        default=stores['store_normalized'].tolist()
-    )
-    
-    # Overall Statistics
-    st.header("Overall Statistics")
-    stats = load_overall_stats(session)
-    
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.metric("Total Receipts", f"{stats['total_receipts']:,}")
-        st.metric("Total Spent", f"${stats['total_spent']:,.2f}")
-    with col2:
-        st.metric("Total Saved", f"${stats['total_saved']:,.2f}")
-        st.metric("Average Receipt", f"${stats['avg_receipt']:,.2f}")
-    with col3:
-        st.metric("Unique Stores", f"{stats['unique_stores']:,}")
+    try:
+        if page == "Upload Receipts":
+            display_upload_section()
+        else:
+            # Date Range Selector
+            st.sidebar.header("Filters")
+            end_date = datetime.now()
+            start_date = end_date - timedelta(days=30)  # Default to last 30 days
+            
+            start_date = st.sidebar.date_input("Start Date", start_date)
+            end_date = st.sidebar.date_input("End Date", end_date)
+            
+            if start_date > end_date:
+                st.error("Error: End date must be after start date")
+                return
+            
+            # Store Selector
+            stores = pd.read_sql(
+                session.query(Receipt.store_normalized)
+                .distinct()
+                .statement,
+                session.bind
+            )
+            selected_stores = st.sidebar.multiselect(
+                "Select Stores",
+                options=stores['store_normalized'].tolist(),
+                default=stores['store_normalized'].tolist()
+            )
+            
+            # Overall Statistics
+            st.header("Overall Statistics")
+            stats = load_overall_stats(session)
+            
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.metric("Total Receipts", f"{stats['total_receipts']:,}")
+                st.metric("Total Spent", f"${stats['total_spent']:,.2f}")
+            with col2:
+                st.metric("Total Saved", f"${stats['total_saved']:,.2f}")
+                st.metric("Average Receipt", f"${stats['avg_receipt']:,.2f}")
+            with col3:
+                st.metric("Unique Stores", f"{stats['unique_stores']:,}")
 
-    # Spending by Category
-    st.header("Spending by Category")
-    category_df = load_category_stats(session)
-    
-    fig_category = px.pie(category_df, 
-                         values='total_spent', 
-                         names='category',
-                         title='Spending Distribution by Category')
-    st.plotly_chart(fig_category)
+            # Spending by Category
+            st.header("Spending by Category")
+            category_df = load_category_stats(session)
+            
+            fig_category = px.pie(category_df, 
+                                values='total_spent', 
+                                names='category',
+                                title='Spending Distribution by Category')
+            st.plotly_chart(fig_category)
 
-    # Day of Week Analysis
-    st.header("Shopping Patterns")
-    dow_data = load_day_of_week_stats(session)
-    dow_fig = create_day_of_week_chart(dow_data)
-    st.plotly_chart(dow_fig, use_container_width=True)
-    
-    # Category by Store Analysis
-    st.header("Category Spending by Store")
-    category_store_data = load_category_by_store_stats(session)
-    heatmap_fig = create_category_store_heatmap(category_store_data)
-    st.plotly_chart(heatmap_fig, use_container_width=True)
-    
-    # Spending Trends
-    st.header("Spending Trends")
-    spending_data = load_store_spending(session, start_date, end_date)
-    spending_data = spending_data[spending_data['store_normalized'].isin(selected_stores)]
-    
-    if not spending_data.empty:
-        fig = create_spending_trend_chart(spending_data, selected_stores)
-        st.plotly_chart(fig, use_container_width=True)
-    else:
-        st.info("No spending data available for the selected date range and stores.")
-    
-    # Recent Receipts
-    st.header("Recent Receipts")
-    receipts_df = load_receipt_details(session)
-    
-    # Display each receipt
-    for _, receipt in receipts_df.iterrows():
-        receipt_date = pd.to_datetime(receipt['date']).strftime('%Y-%m-%d')
-        st.subheader(f"{receipt_date} - {receipt['store_normalized']} - ${receipt['total']:.2f}")
-        
-        # Each receipt can have two expanders side by side
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            with st.expander("View Items"):
-                if receipt['json_path']:
-                    try:
-                        with open(receipt['json_path'], 'r') as f:
-                            data = json.load(f)
-                            items_df = pd.DataFrame(data['items'])
-                            display_receipt_items(items_df)
-                    except Exception as e:
-                        st.error(f"Error loading receipt items: {str(e)}")
-                else:
-                    st.warning("Receipt details not available")
-        
-        with col2:
-            with st.expander("View Images"):
-                try:
-                    images = find_receipt_images(receipt['json_path'])
-                    if images:
-                        for img_path in images:
-                            st.image(str(img_path), caption=img_path.name)
-                    else:
-                        st.warning("No receipt images found")
-                except Exception as e:
-                    st.error(f"Error loading receipt images: {str(e)}")
-        
-        st.divider()  # Add a line between receipts
-    
-    session.close()
+            # Day of Week Analysis
+            st.header("Shopping Patterns")
+            dow_data = load_day_of_week_stats(session)
+            dow_fig = create_day_of_week_chart(dow_data)
+            st.plotly_chart(dow_fig, use_container_width=True)
+
+            # Category by Store Analysis
+            st.header("Category Spending by Store")
+            category_store_data = load_category_by_store_stats(session)
+            heatmap_fig = create_category_store_heatmap(category_store_data)
+            st.plotly_chart(heatmap_fig, use_container_width=True)
+            
+            # Spending Trends
+            st.header("Spending Trends")
+            spending_data = load_store_spending(session, start_date, end_date)
+            spending_data = spending_data[spending_data['store_normalized'].isin(selected_stores)]
+            
+            if not spending_data.empty:
+                fig = create_spending_trend_chart(spending_data, selected_stores)
+                st.plotly_chart(fig, use_container_width=True)
+            else:
+                st.info("No spending data available for the selected date range and stores.")
+            
+            # Recent Receipts
+            st.header("Recent Receipts")
+            receipts_df = load_receipt_details(session)
+            
+            # Display each receipt
+            for _, receipt in receipts_df.iterrows():
+                receipt_date = pd.to_datetime(receipt['date']).strftime('%Y-%m-%d')
+                st.subheader(f"{receipt_date} - {receipt['store_normalized']} - ${receipt['total']:.2f}")
+                
+                # Each receipt can have two expanders side by side
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    with st.expander("View Items"):
+                        if receipt['json_path']:
+                            try:
+                                with open(receipt['json_path'], 'r') as f:
+                                    data = json.load(f)
+                                    items_df = pd.DataFrame(data['items'])
+                                    display_receipt_items(items_df)
+                            except Exception as e:
+                                st.error(f"Error loading receipt items: {str(e)}")
+                        else:
+                            st.warning("Receipt details not available")
+                
+                with col2:
+                    with st.expander("View Images"):
+                        try:
+                            images = find_receipt_images(receipt['json_path'])
+                            if images:
+                                for img_path in images:
+                                    st.image(str(img_path), caption=img_path.name)
+                            else:
+                                st.warning("No receipt images found")
+                        except Exception as e:
+                            st.error(f"Error loading receipt images: {str(e)}")
+                
+                st.divider()  # Add a line between receipts
+    finally:
+        session.close()
 
 if __name__ == "__main__":
     main()
