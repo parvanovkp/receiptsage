@@ -1,0 +1,179 @@
+{
+  "metadata": {
+    "store": "Lunardi's Markets",
+    "address": "1085 Alameda De Las Pulgas, Belmont, CA 94002",
+    "phone": "(650) 591-5768",
+    "receipt_number": "0403",
+    "date": "12/29/2024",
+    "time": "12:43:35"
+  },
+  "items": [
+    {
+      "brand": null,
+      "product": "Bottle Deposit",
+      "product_type": "bottle deposit",
+      "category": "Miscellaneous",
+      "quantity": 2,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 3.0,
+      "total_price": 6.0,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": "Yakult",
+      "product": "Yakult Dairy Beverage",
+      "product_type": "dairy beverage",
+      "category": "Grocery",
+      "quantity": 1,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 4.39,
+      "total_price": 4.39,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": "Straus",
+      "product": "Straus Homo Glass",
+      "product_type": "milk",
+      "category": "Grocery",
+      "quantity": 1,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 6.99,
+      "total_price": 6.99,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": "Straus",
+      "product": "Straus Plain Kefir",
+      "product_type": "kefir",
+      "category": "Grocery",
+      "quantity": 1,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 6.69,
+      "total_price": 6.69,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": null,
+      "product": "Arrowhead 3 Liter (6 Per Box)",
+      "product_type": "water",
+      "category": "Grocery",
+      "quantity": 2,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 2.29,
+      "total_price": 4.58,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": null,
+      "product": "Silly Cow Chocolate Chocolate",
+      "product_type": "chocolate drink",
+      "category": "Grocery",
+      "quantity": 1,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 8.99,
+      "total_price": 8.99,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": null,
+      "product": "Non Tax CRV Large Single",
+      "product_type": "CRV",
+      "category": "Miscellaneous",
+      "quantity": 2,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 0.1,
+      "total_price": 0.2,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": null,
+      "product": "CRV Non Tax 5 Count",
+      "product_type": "CRV",
+      "category": "Miscellaneous",
+      "quantity": 1,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 0.25,
+      "total_price": 0.25,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": null,
+      "product": "Fresh Pesto Sauce",
+      "product_type": "pesto sauce",
+      "category": "Grocery",
+      "quantity": 1,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 5.99,
+      "total_price": 5.99,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": null,
+      "product": "Bananas",
+      "product_type": "bananas",
+      "category": "Produce",
+      "quantity": null,
+      "weight": 2.59,
+      "unit": "pounds",
+      "unit_price": 0.99,
+      "total_price": 2.56,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": "Lunardi's",
+      "product": "Lunardi's Scones",
+      "product_type": "scones",
+      "category": "Bakery",
+      "quantity": 1,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 3.99,
+      "total_price": 3.99,
+      "is_organic": false,
+      "savings": null
+    },
+    {
+      "brand": null,
+      "product": "NSA Apple Turnover",
+      "product_type": "apple turnover",
+      "category": "Bakery",
+      "quantity": 1,
+      "weight": null,
+      "unit": "each",
+      "unit_price": 3.69,
+      "total_price": 3.69,
+      "is_organic": false,
+      "savings": null
+    }
+  ],
+  "totals": {
+    "subtotal": 56.21,
+    "total_savings": 0.0,
+    "tax": [],
+    "total": 56.21
+  },
+  "payment": {
+    "method": "Visa",
+    "card_last_four": null,
+    "amount": 56.21
+  }
+}

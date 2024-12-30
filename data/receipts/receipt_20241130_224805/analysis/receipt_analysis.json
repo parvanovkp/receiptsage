@@ -5,7 +5,8 @@
     "phone": "303-545-6611",
     "receipt_number": "908 28003",
     "date": "11/30/2024",
-    "time": "04:25 PM"
+    "time": "04:25 PM",
+    "image_path": "/Users/kaloyanparvanov/Documents/GitHub/ReceiptSage/data/receipts/receipt_20241229_224805/WF.jpg"
   },
   "items": [
     {
@@ -68,7 +69,7 @@
       "quantity": 1,
       "weight": null,
       "unit": "each",
-      "unit_price": 6.0,
+      "unit_price": 7.49,
       "total_price": 4.49,
       "is_organic": false,
       "savings": 3.0
@@ -88,7 +89,7 @@
     },
     {
       "brand": "365 Whole Foods Market",
-      "product": "Organic Peeled Garlic 6 Ounce",
+      "product": "Organic Peeled Garlic 6 oz",
       "product_type": "garlic",
       "category": "Produce",
       "quantity": 1,
@@ -173,7 +174,7 @@
       "weight": 0.37,
       "unit": "pounds",
       "unit_price": 15.99,
-      "total_price": 5.37,
+      "total_price": 5.97,
       "is_organic": false,
       "savings": null
     },

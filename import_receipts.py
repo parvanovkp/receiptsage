@@ -8,8 +8,22 @@ from store_utils import normalize_store_name
 
 def parse_datetime(date_str, time_str):
     """Parse date and time strings into datetime object"""
-    dt_str = f"{date_str} {time_str}"
-    return datetime.strptime(dt_str, "%m/%d/%Y %I:%M %p")
+    try:
+        # First try 24-hour format
+        dt_str = f"{date_str} {time_str}"
+        return datetime.strptime(dt_str, "%m/%d/%Y %H:%M:%S")
+    except ValueError:
+        try:
+            # If that fails, try 12-hour format
+            return datetime.strptime(dt_str, "%m/%d/%Y %I:%M %p")
+        except ValueError:
+            try:
+                # Try without seconds
+                return datetime.strptime(dt_str, "%m/%d/%Y %H:%M")
+            except ValueError:
+                # If all fails, return current datetime
+                print(f"Warning: Could not parse date/time: {dt_str}")
+                return datetime.now()
 
 def import_receipt(session, json_path):
     """Import a single receipt JSON file into the database"""
@@ -24,10 +38,20 @@ def import_receipt(session, json_path):
     store_name = metadata['store']
     normalized_store = normalize_store_name(store_name)
     
+    # Find the receipt image
+    receipt_dir = Path(json_path).parent.parent
+    image_files = list(receipt_dir.glob('*.jpg'))
+    image_path = str(image_files[0]) if image_files else None
+    
+    # If image path is in metadata, use that instead
+    if metadata.get('image_path'):
+        image_path = metadata['image_path']
+    
     receipt = Receipt(
         store=store_name,
         store_normalized=normalized_store,
         json_path=str(json_path),
+        image_path=image_path,  # Add image path
         address=metadata['address'],
         phone=metadata['phone'],
         receipt_number=metadata['receipt_number'],

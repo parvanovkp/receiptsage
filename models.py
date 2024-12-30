@@ -10,8 +10,9 @@ class Receipt(Base):
     
     id = Column(Integer, primary_key=True)
     store = Column(String)
-    store_normalized = Column(String)  # Added for store normalization
-    json_path = Column(String)         # Added for receipt lookup
+    store_normalized = Column(String)
+    json_path = Column(String)
+    image_path = Column(String)  # Added to store image path
     address = Column(String)
     phone = Column(String, nullable=True)
     receipt_number = Column(String)

@@ -5,7 +5,8 @@
     "phone": "303-545-6611",
     "receipt_number": "906 5758",
     "date": "12/04/2024",
-    "time": "05:38 PM"
+    "time": "05:38 PM",
+    "image_path": "/Users/kaloyanparvanov/Documents/GitHub/ReceiptSage/data/receipts/receipt_20241229_224853/WH2.jpg"
   },
   "items": [
     {
@@ -17,9 +18,9 @@
       "weight": null,
       "unit": "each",
       "unit_price": 7.6,
-      "total_price": 7.6,
+      "total_price": 30.4,
       "is_organic": false,
-      "savings": 1.39
+      "savings": 5.56
     },
     {
       "brand": null,
@@ -87,10 +88,10 @@
       "savings": null
     },
     {
-      "brand": "Taylor Farms",
-      "product": "Organic Chimichurri Salad",
+      "brand": null,
+      "product": "Taylor Farms Organic Chimichurri Salad",
       "product_type": "salad",
-      "category": "Produce",
+      "category": "Grocery",
       "quantity": 1,
       "weight": null,
       "unit": "each",
@@ -103,7 +104,7 @@
       "brand": "365 Whole Foods Market",
       "product": "Organic Classic Caesar Salad",
       "product_type": "salad",
-      "category": "Produce",
+      "category": "Grocery",
       "quantity": 1,
       "weight": null,
       "unit": "each",
@@ -115,8 +116,8 @@
     {
       "brand": "365 Whole Foods Market",
       "product": "Sweet Chopped Kale Salad Kit",
-      "product_type": "salad kit",
-      "category": "Produce",
+      "product_type": "salad",
+      "category": "Grocery",
       "quantity": 1,
       "weight": null,
       "unit": "each",
@@ -127,7 +128,7 @@
     },
     {
       "brand": null,
-      "product": "Blueberry Pint",
+      "product": "Organic Blueberry Pint",
       "product_type": "blueberries",
       "category": "Produce",
       "quantity": 1,
@@ -135,12 +136,12 @@
       "unit": "each",
       "unit_price": 3.99,
       "total_price": 3.99,
-      "is_organic": false,
+      "is_organic": true,
       "savings": null
     },
     {
       "brand": null,
-      "product": "Banana",
+      "product": "Organic Banana",
       "product_type": "banana",
       "category": "Produce",
       "quantity": null,
@@ -148,7 +149,7 @@
       "unit": "pounds",
       "unit_price": 0.79,
       "total_price": 1.83,
-      "is_organic": false,
+      "is_organic": true,
       "savings": null
     },
     {
@@ -172,7 +173,7 @@
       "quantity": null,
       "weight": 1.17,
       "unit": "pounds",
-      "unit_price": 7.88,
+      "unit_price": 8.99,
       "total_price": 7.88,
       "is_organic": false,
       "savings": 2.64
@@ -193,7 +194,7 @@
     {
       "brand": null,
       "product": "Meyenberg Goat Milk",
-      "product_type": "goat milk",
+      "product_type": "milk",
       "category": "Grocery",
       "quantity": 1,
       "weight": null,

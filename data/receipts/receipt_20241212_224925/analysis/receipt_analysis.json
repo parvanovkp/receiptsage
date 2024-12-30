@@ -5,7 +5,8 @@
     "phone": "303-545-6611",
     "receipt_number": "912 86883",
     "date": "12/12/2024",
-    "time": "04:41 PM"
+    "time": "04:41 PM",
+    "image_path": "/Users/kaloyanparvanov/Documents/GitHub/ReceiptSage/data/receipts/receipt_20241229_224925/WH3.jpg"
   },
   "items": [
     {
@@ -146,7 +147,7 @@
       "quantity": 1,
       "weight": null,
       "unit": "each",
-      "unit_price": 11.99,
+      "unit_price": 10.19,
       "total_price": 10.19,
       "is_organic": false,
       "savings": 1.8
@@ -166,7 +167,7 @@
     },
     {
       "brand": null,
-      "product": "Jasper Bakery Whole Wheat Pizza",
+      "product": "JSPBKY Whole Wheat Pizza",
       "product_type": "pizza",
       "category": "Grocery",
       "quantity": 1,

@@ -16,7 +16,7 @@ def get_known_stores() -> List[str]:
     except sqlite3.Error:
         return []
 
-def normalize_store_name(store_name: str, threshold: int = 51) -> Optional[str]:
+def normalize_store_name(store_name: str, threshold: int = 80) -> Optional[str]:
     """
     Normalize store names using fuzzy string matching
     
@@ -30,28 +30,43 @@ def normalize_store_name(store_name: str, threshold: int = 51) -> Optional[str]:
     if not store_name:
         return None
     
-    # Clean input
+    # Clean input - common variations
+    store_maps = {
+        "Whole Foods Market": ["Whole Foods", "WFM", "Whole Foods Mkt", "WF Market"],
+        "Lunardi's": ["Lunardis", "Lunardi", "Lunardi's Market"]
+    }
+    
+    # Clean input name
     store = store_name.strip()
     
-    # Get known stores from database
-    known_stores = get_known_stores()
+    # Direct mapping check
+    for normalized_name, variants in store_maps.items():
+        if store in variants or store == normalized_name:
+            return normalized_name
     
-    # If no known stores, this is the first one
-    if not known_stores:
-        return ' '.join(word.capitalize() for word in store.split())
+    # Try fuzzy matching with known stores and their variants
+    best_score = 0
+    best_match = None
     
-    # Find best match among known stores
-    best_match, score = process.extractOne(
-        store,
-        known_stores,
-        scorer=fuzz.token_sort_ratio
-    )
+    for normalized_name, variants in store_maps.items():
+        # Check against normalized name
+        score = fuzz.token_sort_ratio(store, normalized_name)
+        if score > best_score:
+            best_score = score
+            best_match = normalized_name
+            
+        # Check against variants
+        for variant in variants:
+            score = fuzz.token_sort_ratio(store, variant)
+            if score > best_score:
+                best_score = score
+                best_match = normalized_name
     
-    # If we have a good match, use it
-    if score >= threshold:
+    # If we have a good match above threshold
+    if best_score >= threshold:
         return best_match
     
-    # If no good match, clean and return as new store
+    # No match found, return cleaned original
     return ' '.join(word.capitalize() for word in store.split())
 
 def analyze_store_matches(store_name: str, threshold: int = 80) -> dict:

@@ -1,0 +1,8 @@
+storage:
+  # Default receipts directory, users can change this
+  receipts_dir: /Users/kaloyanparvanov/Documents/GitHub/ReceiptSage/data/receipts
+  database_path: receipts.db
+
+display:
+  max_image_width: 800
+  max_receipt_history: 50
