@@ -5,15 +5,14 @@
     "phone": "303-545-6611",
     "receipt_number": "906 5758",
     "date": "12/04/2024",
-    "time": "05:38 PM",
-    "image_path": "/Users/kaloyanparvanov/Documents/GitHub/ReceiptSage/data/receipts/receipt_20241229_224853/WH2.jpg"
+    "time": "05:38 PM"
   },
   "items": [
     {
       "brand": null,
       "product": "Seasonal Caprese Sandwich",
-      "product_type": "sandwich",
-      "category": "Grocery",
+      "product_type": "Sandwich",
+      "category": "Deli & Prepared Foods",
       "quantity": 4,
       "weight": null,
       "unit": "each",
@@ -25,8 +24,8 @@
     {
       "brand": null,
       "product": "Chicken Goat Cheese Arugula",
-      "product_type": "salad",
-      "category": "Grocery",
+      "product_type": "Prepared Salad",
+      "category": "Deli & Prepared Foods",
       "quantity": 1,
       "weight": null,
       "unit": "each",
@@ -38,8 +37,8 @@
     {
       "brand": "Sabra",
       "product": "Pine Nut Hummus",
-      "product_type": "hummus",
-      "category": "Grocery",
+      "product_type": "Hummus",
+      "category": "Deli & Prepared Foods",
       "quantity": 1,
       "weight": null,
       "unit": "each",
@@ -51,8 +50,8 @@
     {
       "brand": "Sabra",
       "product": "Roasted Red Pepper Hummus",
-      "product_type": "hummus",
-      "category": "Grocery",
+      "product_type": "Hummus",
+      "category": "Deli & Prepared Foods",
       "quantity": 1,
       "weight": null,
       "unit": "each",
@@ -64,8 +63,8 @@
     {
       "brand": null,
       "product": "Cream of Mushroom Soup",
-      "product_type": "soup",
-      "category": "Grocery",
+      "product_type": "Soup",
+      "category": "Deli & Prepared Foods",
       "quantity": 1,
       "weight": null,
       "unit": "each",
@@ -77,8 +76,8 @@
     {
       "brand": null,
       "product": "Chile Chicken Verde Soup",
-      "product_type": "soup",
-      "category": "Grocery",
+      "product_type": "Soup",
+      "category": "Deli & Prepared Foods",
       "quantity": 1,
       "weight": null,
       "unit": "each",
@@ -88,10 +87,10 @@
       "savings": null
     },
     {
-      "brand": null,
-      "product": "Taylor Farms Organic Chimichurri Salad",
-      "product_type": "salad",
-      "category": "Grocery",
+      "brand": "Taylor Farms",
+      "product": "Organic Chimichurri Salad",
+      "product_type": "Salad",
+      "category": "Produce",
       "quantity": 1,
       "weight": null,
       "unit": "each",
@@ -103,8 +102,8 @@
     {
       "brand": "365 Whole Foods Market",
       "product": "Organic Classic Caesar Salad",
-      "product_type": "salad",
-      "category": "Grocery",
+      "product_type": "Salad",
+      "category": "Produce",
       "quantity": 1,
       "weight": null,
       "unit": "each",
@@ -116,8 +115,8 @@
     {
       "brand": "365 Whole Foods Market",
       "product": "Sweet Chopped Kale Salad Kit",
-      "product_type": "salad",
-      "category": "Grocery",
+      "product_type": "Salad Kit",
+      "category": "Produce",
       "quantity": 1,
       "weight": null,
       "unit": "each",
@@ -129,7 +128,7 @@
     {
       "brand": null,
       "product": "Organic Blueberry Pint",
-      "product_type": "blueberries",
+      "product_type": "Blueberries",
       "category": "Produce",
       "quantity": 1,
       "weight": null,
@@ -142,7 +141,7 @@
     {
       "brand": null,
       "product": "Organic Banana",
-      "product_type": "banana",
+      "product_type": "Banana",
       "category": "Produce",
       "quantity": null,
       "weight": 2.32,
@@ -155,8 +154,8 @@
     {
       "brand": null,
       "product": "Marinated Chicken Breast",
-      "product_type": "chicken breast",
-      "category": "Meat",
+      "product_type": "Chicken Breast",
+      "category": "Meat & Poultry",
       "quantity": null,
       "weight": 1.32,
       "unit": "pounds",
@@ -168,12 +167,12 @@
     {
       "brand": null,
       "product": "Steakhouse Chicken Breast",
-      "product_type": "chicken breast",
-      "category": "Meat",
+      "product_type": "Chicken Breast",
+      "category": "Meat & Poultry",
       "quantity": null,
       "weight": 1.17,
       "unit": "pounds",
-      "unit_price": 8.99,
+      "unit_price": 7.88,
       "total_price": 7.88,
       "is_organic": false,
       "savings": 2.64
@@ -181,8 +180,8 @@
     {
       "brand": null,
       "product": "Pasture Raised Large Eggs",
-      "product_type": "eggs",
-      "category": "Grocery",
+      "product_type": "Eggs",
+      "category": "Dairy & Eggs",
       "quantity": 1,
       "weight": null,
       "unit": "each",
@@ -194,8 +193,8 @@
     {
       "brand": null,
       "product": "Meyenberg Goat Milk",
-      "product_type": "milk",
-      "category": "Grocery",
+      "product_type": "Goat Milk",
+      "category": "Dairy & Eggs",
       "quantity": 1,
       "weight": null,
       "unit": "each",
@@ -207,8 +206,8 @@
     {
       "brand": null,
       "product": "Carry Out Bag Charge",
-      "product_type": "bag",
-      "category": "Miscellaneous",
+      "product_type": "Bag",
+      "category": "Household",
       "quantity": 2,
       "weight": null,
       "unit": "each",

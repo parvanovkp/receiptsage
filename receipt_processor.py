@@ -128,8 +128,8 @@ Output the complete merged receipt text."""
   "items": [{
     "brand": string | null,     // Full brand name, not abbreviated
     "product": string,          // Full product name, not abbreviated
-    "product_type": string,     // Generic product type (e.g., toilet paper, pie, bread, salmon)
-    "category": string,         // One of: Produce, Bakery, Household, Meat, Seafood, Grocery, Miscellaneous
+    "product_type": string,     // Generic product type (e.g., toilet paper, bread, salmon)
+    "category": string,         // Must be exactly one of the categories defined below
     "quantity": number | null,  // Use for unit items
     "weight": number | null,    // Use for weighted items (in pounds)
     "unit": "pounds" | "each",
@@ -154,6 +154,97 @@ Output the complete merged receipt text."""
   }
 }
 
+Category Definitions (use EXACTLY one of these names):
+
+1. Produce
+   - Fresh fruits and vegetables
+   - Fresh herbs
+   - Pre-cut produce
+   - Salad mixes
+
+2. Meat & Poultry
+   - Fresh and frozen meat
+   - Chicken, turkey, duck
+   - Processed meats
+   - Deli meats
+
+3. Seafood
+   - Fresh and frozen fish
+   - Shellfish
+   - Smoked fish
+   - Canned fish
+
+4. Dairy & Eggs
+   - Milk, cream
+   - Cheese
+   - Yogurt, butter
+   - Eggs and egg substitutes
+
+5. Bakery
+   - Bread, rolls, buns
+   - Cakes, pies
+   - Cookies
+   - Pastries
+
+6. Deli & Prepared Foods
+   - Ready-to-eat meals
+   - Prepared salads
+   - Hot foods
+   - Sandwiches
+
+7. Pantry
+   - Canned goods
+   - Pasta, rice, grains
+   - Condiments
+   - Baking supplies
+   - Oils, vinegars
+
+8. Snacks & Candy
+   - Chips
+   - Crackers
+   - Candy
+   - Nuts and dried fruit
+
+9. Beverages
+   - Soft drinks
+   - Coffee, tea
+   - Juice
+   - Water
+
+10. Frozen Foods
+    - Frozen meals
+    - Frozen vegetables
+    - Ice cream
+    - Frozen breakfast items
+
+11. Household
+    - Cleaning supplies
+    - Paper products
+    - Storage items
+    - Laundry supplies
+
+12. Personal Care
+    - Hygiene products
+    - Beauty items
+    - First aid
+    - Medications
+
+13. Alcohol
+    - Beer
+    - Wine
+    - Spirits
+
+14. Health & Wellness
+    - Vitamins
+    - Supplements
+    - Health foods
+    - Protein powders
+
+15. Pet Supplies
+    - Pet food
+    - Pet treats
+    - Pet care items
+
 Rules:
 1. Never use abbreviations in product or brand names. Examples:
    - "FCL TSSUE" → "Facial Tissue"
@@ -167,30 +258,18 @@ Rules:
    - "SOCKEY" → "Sockeye"
    - "FLLT" → "Fillet"
 
-2. For product_type, use generic product categories like:
-   - facial tissue
-   - toilet paper
-   - aluminum foil
-   - sourdough bread
-   - apple pie
-   - asparagus
-   - garlic
-   - bananas
-   - hummus
-   - turkey
-   - salmon
-
-3. Brand name normalization:
+2. Brand name normalization:
    - "365WFM" → "365 Whole Foods Market"
    - "BMBMBO" → "Bamboo"
    - "SWFM" → "Whole Foods Market"
 
-4. Important:
+3. Important:
    - Check for and include every item on the receipt
    - Look carefully for items that might span multiple lines
    - For weighted items: use weight in pounds, set quantity null
    - For unit items: use quantity, set weight null
-   - Keep any certification or grade indicators (MSC, S3) in the product name"""
+   - Keep any certification or grade indicators (MSC, S3) in the product name
+   - Assign each item to EXACTLY ONE category from the list above"""
                     },
                     {
                         "role": "user",
@@ -238,8 +317,8 @@ Rules:
   "items": [{
     "brand": string | null,     // Full brand name, not abbreviated
     "product": string,          // Full product name, not abbreviated
-    "product_type": string,     // Generic product type (e.g., toilet paper, pie, bread, salmon)
-    "category": string,         // One of: Produce, Bakery, Household, Meat, Seafood, Grocery, Miscellaneous
+    "product_type": string,     // Generic product type (e.g., toilet paper, bread, salmon)
+    "category": string,         // Must be exactly one of the categories defined below
     "quantity": number | null,  // Use for unit items
     "weight": number | null,    // Use for weighted items (in pounds)
     "unit": "pounds" | "each",
@@ -264,11 +343,103 @@ Rules:
   }
 }
 
+Category Definitions (use EXACTLY one of these names):
+
+1. Produce
+   - Fresh fruits and vegetables
+   - Fresh herbs
+   - Pre-cut produce
+   - Salad mixes
+
+2. Meat & Poultry
+   - Fresh and frozen meat
+   - Chicken, turkey, duck
+   - Processed meats
+   - Deli meats
+
+3. Seafood
+   - Fresh and frozen fish
+   - Shellfish
+   - Smoked fish
+   - Canned fish
+
+4. Dairy & Eggs
+   - Milk, cream
+   - Cheese
+   - Yogurt, butter
+   - Eggs and egg substitutes
+
+5. Bakery
+   - Bread, rolls, buns
+   - Cakes, pies
+   - Cookies
+   - Pastries
+
+6. Deli & Prepared Foods
+   - Ready-to-eat meals
+   - Prepared salads
+   - Hot foods
+   - Sandwiches
+
+7. Pantry
+   - Canned goods
+   - Pasta, rice, grains
+   - Condiments
+   - Baking supplies
+   - Oils, vinegars
+
+8. Snacks & Candy
+   - Chips
+   - Crackers
+   - Candy
+   - Nuts and dried fruit
+
+9. Beverages
+   - Soft drinks
+   - Coffee, tea
+   - Juice
+   - Water
+
+10. Frozen Foods
+    - Frozen meals
+    - Frozen vegetables
+    - Ice cream
+    - Frozen breakfast items
+
+11. Household
+    - Cleaning supplies
+    - Paper products
+    - Storage items
+    - Laundry supplies
+
+12. Personal Care
+    - Hygiene products
+    - Beauty items
+    - First aid
+    - Medications
+
+13. Alcohol
+    - Beer
+    - Wine
+    - Spirits
+
+14. Health & Wellness
+    - Vitamins
+    - Supplements
+    - Health foods
+    - Protein powders
+
+15. Pet Supplies
+    - Pet food
+    - Pet treats
+    - Pet care items
+
 Rules:
 1. Expand all abbreviations into full names
 2. Use generic types for product_type field
 3. Include every item from the receipt
-4. Double-check all prices and calculations"""
+4. Double-check all prices and calculations
+5. Assign each item to EXACTLY ONE category from the list above"""
                     },
                     {
                         "role": "user",

@@ -544,7 +544,7 @@ def display_upload_section():
     
     # File uploader with drag-and-drop
     uploaded_files = st.file_uploader(
-        "Drop receipt images here or click to browse",
+        "Drop receipt images from your shopping trip here or click to browse",
         accept_multiple_files=True,
         type=['jpg'],
         help="You can upload multiple receipt images at once"

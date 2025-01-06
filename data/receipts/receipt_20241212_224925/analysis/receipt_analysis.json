@@ -5,15 +5,14 @@
     "phone": "303-545-6611",
     "receipt_number": "912 86883",
     "date": "12/12/2024",
-    "time": "04:41 PM",
-    "image_path": "/Users/kaloyanparvanov/Documents/GitHub/ReceiptSage/data/receipts/receipt_20241229_224925/WH3.jpg"
+    "time": "04:41 PM"
   },
   "items": [
     {
       "brand": null,
       "product": "Hot Bar",
-      "product_type": "prepared food",
-      "category": "Grocery",
+      "product_type": "Prepared food",
+      "category": "Deli & Prepared Foods",
       "quantity": null,
       "weight": 1.83,
       "unit": "pounds",
@@ -25,7 +24,7 @@
     {
       "brand": null,
       "product": "Cookie Bar",
-      "product_type": "cookies",
+      "product_type": "Cookies",
       "category": "Bakery",
       "quantity": null,
       "weight": 0.54,
@@ -38,8 +37,8 @@
     {
       "brand": "Sabra",
       "product": "Pine Nut Hummus",
-      "product_type": "hummus",
-      "category": "Grocery",
+      "product_type": "Hummus",
+      "category": "Deli & Prepared Foods",
       "quantity": 1,
       "weight": null,
       "unit": "each",
@@ -51,8 +50,8 @@
     {
       "brand": null,
       "product": "Organic Whole Milk",
-      "product_type": "milk",
-      "category": "Grocery",
+      "product_type": "Milk",
+      "category": "Dairy & Eggs",
       "quantity": 1,
       "weight": null,
       "unit": "each",
@@ -64,8 +63,8 @@
     {
       "brand": "Noosa",
       "product": "Coconut Yoghurt",
-      "product_type": "yoghurt",
-      "category": "Grocery",
+      "product_type": "Yogurt",
+      "category": "Dairy & Eggs",
       "quantity": 1,
       "weight": null,
       "unit": "each",
@@ -77,8 +76,8 @@
     {
       "brand": "Noosa",
       "product": "Peach Yoghurt",
-      "product_type": "yoghurt",
-      "category": "Grocery",
+      "product_type": "Yogurt",
+      "category": "Dairy & Eggs",
       "quantity": 1,
       "weight": null,
       "unit": "each",
@@ -90,8 +89,8 @@
     {
       "brand": "Noosa",
       "product": "Vanilla Bean Yoghurt",
-      "product_type": "yoghurt",
-      "category": "Grocery",
+      "product_type": "Yogurt",
+      "category": "Dairy & Eggs",
       "quantity": 2,
       "weight": null,
       "unit": "each",
@@ -103,7 +102,7 @@
     {
       "brand": null,
       "product": "Blueberry Muffin 4 Pack",
-      "product_type": "muffins",
+      "product_type": "Muffins",
       "category": "Bakery",
       "quantity": 1,
       "weight": null,
@@ -116,7 +115,7 @@
     {
       "brand": null,
       "product": "Cinnamon Roll 4 Count",
-      "product_type": "pastry",
+      "product_type": "Cinnamon Rolls",
       "category": "Bakery",
       "quantity": 1,
       "weight": null,
@@ -129,7 +128,7 @@
     {
       "brand": null,
       "product": "Carrot Cake Slice",
-      "product_type": "cake",
+      "product_type": "Cake",
       "category": "Bakery",
       "quantity": 1,
       "weight": null,
@@ -142,12 +141,12 @@
     {
       "brand": null,
       "product": "Nassau Butter Crunch Chicken",
-      "product_type": "chicken",
-      "category": "Meat",
+      "product_type": "Chicken",
+      "category": "Meat & Poultry",
       "quantity": 1,
       "weight": null,
       "unit": "each",
-      "unit_price": 10.19,
+      "unit_price": 11.99,
       "total_price": 10.19,
       "is_organic": false,
       "savings": 1.8
@@ -155,8 +154,8 @@
     {
       "brand": "Whole Foods Market",
       "product": "Dark Chocolate Hazel Truffle",
-      "product_type": "chocolate",
-      "category": "Grocery",
+      "product_type": "Chocolate",
+      "category": "Snacks & Candy",
       "quantity": 1,
       "weight": null,
       "unit": "each",
@@ -167,9 +166,9 @@
     },
     {
       "brand": null,
-      "product": "JSPBKY Whole Wheat Pizza",
-      "product_type": "pizza",
-      "category": "Grocery",
+      "product": "Jasper Bakery Whole Wheat Pita",
+      "product_type": "Pita Bread",
+      "category": "Bakery",
       "quantity": 1,
       "weight": null,
       "unit": "each",
@@ -181,7 +180,7 @@
     {
       "brand": null,
       "product": "Organic Banana",
-      "product_type": "banana",
+      "product_type": "Banana",
       "category": "Produce",
       "quantity": null,
       "weight": 2.6,
@@ -194,8 +193,8 @@
     {
       "brand": null,
       "product": "Carry Out Bag Charge",
-      "product_type": "bag",
-      "category": "Miscellaneous",
+      "product_type": "Bag",
+      "category": "Household",
       "quantity": 2,
       "weight": null,
       "unit": "each",
