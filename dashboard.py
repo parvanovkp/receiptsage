@@ -4,6 +4,7 @@ import json
 import os
 from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
+from config_utils import load_config, setup_storage
 from models import Receipt, ReceiptItem, ReceiptTax
 import plotly.express as px
 import plotly.graph_objects as go
@@ -26,42 +27,6 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
-
-def load_config() -> dict:
-    """Load configuration from config.yaml"""
-    config_path = Path("config.yaml")
-    if not config_path.exists():
-        # Create default config if it doesn't exist
-        default_config = {
-            'storage': {
-                'receipts_dir': str(Path.home() / "ReceiptSage/data/receipts"),
-                'database_path': 'receipts.db'
-            },
-            'display': {
-                'max_image_width': 800,
-                'max_receipt_history': 50
-            }
-        }
-        with open(config_path, 'w') as f:
-            yaml.dump(default_config, f, default_flow_style=False)
-        return default_config
-    
-    with open(config_path) as f:
-        return yaml.safe_load(f)
-
-def setup_storage(config: dict) -> Path:
-    """Setup storage directories based on configuration"""
-    # Expand user home directory and make path absolute
-    receipts_dir = Path(config['storage']['receipts_dir']).expanduser().absolute()
-    
-    # Create full path if it doesn't exist
-    if not receipts_dir.exists():
-        st.write(f"Creating directory: {receipts_dir}")
-        receipts_dir.mkdir(parents=True, exist_ok=True)
-    else:
-        st.write(f"Using existing directory: {receipts_dir}")
-    
-    return receipts_dir
 
 def create_session():
     """Create database session with initialization if needed"""
@@ -611,13 +576,16 @@ def main():
     st.title("Receipt Analysis Dashboard")
     
     # Add navigation
-    page = st.sidebar.radio("Navigation", ["Dashboard", "Upload Receipts"])
+    page = st.sidebar.radio("Navigation", ["Dashboard", "Upload Receipts", "Database Management"])
     
     session = init_dashboard()
     
     try:
         if page == "Upload Receipts":
             display_upload_section()
+        elif page == "Database Management":
+            from database_management import display_database_management
+            display_database_management(session)
         else:
             # Date Range Selector
             st.sidebar.header("Filters")
